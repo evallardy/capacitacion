@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Cursos</h2>
+    <a href="{% url 'curso_create' %}" class="btn btn-primary mb-3">Crear Curso</a>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Costo</th>
+          <th>Duración</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for curso in cursos %}
+          <tr>
+            <td>{{ curso.nombre }}</td>
+            <td>${{ curso.costo }}</td>
+            <td>{{ curso.duracion }} {{ curso.unidad_duracion }}</td>
+            <td>{{ curso.estado }}</td>
+            <td>
+              <a href="{% url 'curso_detail' curso.pk %}" class="btn btn-info btn-sm">Ver</a>
+              <a href="{% url 'curso_update' curso.pk %}" class="btn btn-warning btn-sm">Editar</a>
+              <a href="{% url 'curso_delete' curso.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+              <a href="{% url 'evaluacion_detail' curso.pk %}" class="btn btn-info btn-sm">Evaluación</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

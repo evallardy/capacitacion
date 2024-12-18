@@ -1,0 +1,46 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block css %}
+<style>
+    /* Estilos para el collage de imágenes */
+    .collage-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    .collage-item {
+        flex-basis: 30%; /* Ajusta el tamaño de los elementos según sea necesario */
+        margin-bottom: 20px;
+    }
+    .collage-item img {
+        width: 100%;
+        border-radius: 10px;
+    }
+</style>
+<title>Administración</title>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    {% if not user.is_authenticated %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Bienvenido</h1>
+            
+        </div>
+    </div>
+    <!-- Collage de imágenes -->
+    <div class="row collage-container">
+        <div class="col-md-4 collage-item">
+        </div>
+        <div class="col-md-4 collage-item">
+        </div>
+        <div class="col-md-4 collage-item">
+        </div>
+        <!-- Agrega más imágenes aquí según sea necesario -->
+    </div>
+    {% else %}
+
+    {% endif %}
+</div>
+{% endblock %}

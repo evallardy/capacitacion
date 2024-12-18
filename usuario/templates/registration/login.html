@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block css %}
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+
+
+{% endblock %}
+{% block content %}
+<div class="container col-sm-8 offset-sm-4 col-md-8 offset-md-4 col-8 offset-4 ">
+    <form action="" method="post" onkeypress="return anular(event)">
+        {% csrf_token %}
+        <div class="text-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+            <h1 class="h3 mb-3 font-weight-normal">Registro</h1>
+        </div>
+
+        <div class="form-label-group">
+            <input type="text" name="username" id="id_username" class="form-control" required="" autofocus="">
+            <label for="username">Usuario</label>
+        </div>
+
+        <div class="form-label-group">
+            <input type="password" name="password" id="id_password" class="form-control" required="">
+            <label for="password">Contraseña</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <input class="btn btn-md btn-success" type="submit" value="Entrar">
+    </form>
+</div>
+{% endblock %}

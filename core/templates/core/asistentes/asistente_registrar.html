@@ -1,0 +1,52 @@
+{% extends 'core/base_registro.html' %}
+
+{% block content %}
+{% if capacitacion.activar_evaluacion == 'SI' %}
+<h2>Asistentes</h2>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Área</th>
+        <th>Correo</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asistente in grupo %}
+        <tr>
+          <td>{{ asistente.nombre }}</td>
+          <td>{{ asistente.area }}</td>
+          <td>{{ asistente.correo }}</td>
+          <td>
+            <a href="{% url 'evaluacion_asistente' asistente.capacitacion.curso.id asistente.id %}" class="btn btn-info btn-sm">Evaluación</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% elif capacitacion.activar_evaluacion == 'NO' %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3>Registro para Capacitación {{ capacitacion.curso.nombre }} de la empresa {{ capacitacion.empresa.nombre }}</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.as_p }}
+                    <div class="col-8">
+                        Capacitación
+                        <input type="text" name="capacitacion" id="id_capacitacion" value="{{capacitacion.id}}">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+Curso teminado
+{% endif %}
+{% endblock %}

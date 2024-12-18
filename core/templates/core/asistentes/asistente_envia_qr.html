@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3>Correo Enviado Exitosamente</h3>
+        </div>
+        <div class="card-body">
+            <p>El QR para la capacitación <strong>{{ capacitacion.curso.nombre }}</strong> ha sido enviado a tu correo electrónico.</p>
+            <a href="{% url 'capacitacion_list' %}" class="btn btn-primary">Volver al listado de capacitaciones</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

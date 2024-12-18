@@ -1,0 +1,71 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated %}
+{% if modifica_usuario_perm %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">
+                        Editar usuario
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="row g-3">
+                        {% csrf_token %}
+                        <div class="col-4">
+                            Nombre
+                            <div class="col-12">
+                                {{form.first_name}}
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            Apellidos
+                            <div class="col-12">
+                                {{form.last_name}}
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            Activo
+                            <div class="col-12">
+                                {{form.is_active}}
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            Correo
+                            <div class="col-12">
+                                {{form.email}}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            Nueva contraseña
+                            <div class="col-12">
+                                {{form.password1}}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            Confirmación contraseña
+                            <div class="col-12">
+                                {{form.password2}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row d-flex justify-content-around">
+                            <button type="submit" class="btn btn-info cuadro-boton col-5">Guarda</button>
+                            <a href="{% url 'usuarios' %}" class="btn btn-info cuadro-boton col-5">Regresar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('select[name="is_active"] option:selected').val('{{activo}}')
+//    $("#id_is_active").val();
+</script>
+{% endif %}
+{% endif %}
+{% endblock %}

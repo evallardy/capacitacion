@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>{{ empresa.nombre }}</h2>
+  <p><strong>Dirección:</strong> {{ empresa.direccion }}</p>
+  <p><strong>Contacto:</strong> {{ empresa.contacto }}</p>
+  <a href="{% url 'empresa_update' empresa.pk %}" class="btn btn-warning">Editar</a>
+  <a href="{% url 'empresa_delete' empresa.pk %}" class="btn btn-danger">Eliminar</a>
+  <a href="{% url 'empresa_list' %}" class="btn btn-secondary">Volver</a>
+{% endblock %}

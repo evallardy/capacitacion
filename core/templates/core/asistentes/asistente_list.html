@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Asistentes del curso {{ capacitacion.curso.nombre }} para la empresa {{ capacitacion.empresa.nombre }}</h2>
+  <a href="{% url 'asistente_create' capacitacion.id %}" class="btn btn-primary mb-3">Registrar Nuevo Asistente</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Área</th>
+        <th>Correo</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asistente in asistentes %}
+        <tr>
+          <td>{{ asistente.nombre }}</td>
+          <td>{{ asistente.area }}</td>
+          <td>{{ asistente.correo }}</td>
+          <td>
+            <a href="{% url 'asistente_detail' capacitacion.id asistente.pk %}" class="btn btn-info btn-sm">Ver</a>
+            <a href="{% url 'asistente_update' capacitacion.id asistente.pk %}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="{% url 'asistente_delete' capacitacion.id asistente.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'capacitacion_list' %}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}

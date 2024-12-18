@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            <h3>¡Registro Exitoso!</h3>
+        </div>
+        <div class="card-body">
+            <p>Gracias por registrarte en la capacitación. Tu registro ha sido completado con éxito.</p>
+            <a href="{% url 'capacitacion_list' %}" class="btn btn-primary">Volver al listado de capacitaciones</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

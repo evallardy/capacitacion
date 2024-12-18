@@ -1,0 +1,203 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Evaluación: {{ evaluacion.curso.nombre }}</h1>
+    <p>{{ evaluacion.comentarios }}</p>
+
+    <h2>Preguntas y Respuestas</h2>
+    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarPregunta">
+        Agregar Pregunta
+    </button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pregunta in preguntas_respuestas %}
+                <tr style="background-color: #f8f9fa;">
+                    <td>{{ pregunta.pregunta }}</td>
+                    <td>
+                      <button class="btn btn-success btn-sm" data-bs-toggle="modal" 
+                              data-bs-target="#modalAgregarRespuesta" 
+                              data-pregunta-id="{{ pregunta.id }}">
+                          Agregar Respuesta
+                      </button>
+                      <button class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                              data-bs-target="#modalEliminarPregunta" 
+                              data-pregunta-id="{{ pregunta.id }}">
+                          Elimina Pregunta
+                      </button>
+                  </td>
+              </tr>
+              <tr>
+                <td>
+                  <table class="ms-5">
+                    {% for respuesta in pregunta.evaluacion_respuestas.all %}
+                        <tr>
+                          <td {% if respuesta.correcta %} style="background-color: #d4edda;" {% endif %}>
+                            {% if respuesta.correcta %} » {% endif %}
+                          </td>
+                          <td {% if respuesta.correcta %} style="background-color: #d4edda;" {% endif %}>
+                            {{ respuesta.respuesta }}
+                          </td>
+                          <td>
+                            <button class="btn btn-danger btn-sm ms-5" data-bs-toggle="modal" 
+                              data-bs-target="#modalEliminarRespuesta" 
+                              data-respuesta-id="{{ respuesta.id }}">
+                                Elimina Respuesta
+                            </button>
+                          </td>
+                        </tr>
+                    {% endfor %}
+                  </table>
+                </td>
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'curso_list' %}" class="btn btn-secondary">Volver a cursos</a>
+</div>
+
+<!-- Modal para agregar pregunta -->
+<div class="modal fade" id="modalAgregarPregunta" tabindex="-1" aria-labelledby="modalAgregarPreguntaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAgregarPregunta" method="post" action="{% url 'pregunta_create' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarPreguntaLabel">Agregar Pregunta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="evaluacion" value="{{ evaluacion.id }}">
+                    <div class="mb-3">
+                        <label for="pregunta" class="form-label">Pregunta</label>
+                        <textarea class="form-control" id="pregunta" name="pregunta" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar pregunta -->
+<div class="modal fade" id="modalEliminarPregunta" tabindex="-1" aria-labelledby="modalEliminarPreguntaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <form id="formEliminarPregunta" method="post" action="{% url 'pregunta_delete' 0 %}">
+              {% csrf_token %}
+              <div class="modal-header">
+                  <h5 class="modal-title" id="modalEliminarPreguntaLabel">Eliminar Pregunta</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar esta pregunta?</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<!-- Modal para agregar respuesta -->
+<div class="modal fade" id="modalAgregarRespuesta" tabindex="-1" aria-labelledby="modalAgregarRespuestaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="formAgregarRespuesta" method="post" action="{% url 'respuesta_create' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarRespuestaLabel">Agregar Respuesta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="preguntaId" name="evaluacion_pregunta">
+                    <div class="mb-3">
+                        <label for="respuesta" class="form-label">Respuesta</label>
+                        <textarea class="form-control" id="respuesta" name="respuesta" rows="3" required></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="correcta" name="correcta">
+                        <label class="form-check-label" for="correcta">Respuesta Correcta</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar respuesta -->
+<div class="modal fade" id="modalEliminarRespuesta" tabindex="-1" aria-labelledby="modalEliminarRespuestaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <form id="formEliminarRespuesta" method="post" action="{% url 'respuesta_delete' 0 %}">
+              {% csrf_token %}
+              <div class="modal-header">
+                  <h5 class="modal-title" id="modalEliminarRespuestaLabel">Eliminar Respuesta</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar esta respuesta?</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
+
+<script>
+  // Asignar el ID de la pregunta al modal de pregunta
+  const modalAgregarPregunta = document.getElementById('modalAgregarPregunta');
+  modalAgregarPregunta.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget; // Botón que activó el modal
+      const preguntaId = button.getAttribute('data-pregunta-id');
+      const inputPreguntaId = modalAgregarPregunta.querySelector('#preguntaId');
+      inputPreguntaId.value = preguntaId;
+  });
+  // Manejar el modal para eliminar pregunta
+  const modalEliminarPregunta = document.getElementById('modalEliminarPregunta');
+  modalEliminarPregunta.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const preguntaId = button.getAttribute('data-pregunta-id');
+
+      const form = document.getElementById('formEliminarPregunta');
+      form.action = `{% url 'pregunta_delete' 0 %}`.replace('0', preguntaId);
+  });
+  // Asignar el ID de la pregunta al modal de respuesta
+  const modalAgregarRespuesta = document.getElementById('modalAgregarRespuesta');
+  modalAgregarRespuesta.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget; // Botón que activó el modal
+      const preguntaId = button.getAttribute('data-pregunta-id');
+      const inputPreguntaId = modalAgregarRespuesta.querySelector('#preguntaId');
+      inputPreguntaId.value = preguntaId;
+  });
+  // Manejar el modal para eliminar respuesta
+  const modalEliminarRespuesta = document.getElementById('modalEliminarRespuesta');
+  modalEliminarRespuesta.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const respuestaId = button.getAttribute('data-respuesta-id');
+
+      const form = document.getElementById('formEliminarRespuesta');
+      form.action = `{% url 'respuesta_delete' 0 %}`.replace('0', respuestaId);
+  });
+</script>
+{% endblock %}

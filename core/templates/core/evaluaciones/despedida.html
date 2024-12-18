@@ -1,0 +1,13 @@
+{% extends 'core/base_registro.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">¡Gracias por tu participación!</h1>
+    <p>Esperamos que esta evaluación te haya sido útil. Nos vemos en el próximo curso.</p>
+</div>
+<script>
+    // Cierra la ventana después de 3 segundos
+    setTimeout(function() {
+        window.close();
+    }, 3000);
+</script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>{{ asistente.nombre }}</h2>
+  <p><strong>Área:</strong> {{ asistente.area }}</p>
+  <p><strong>Correo:</strong> {{ asistente.correo }}</p>
+  <a href="{% url 'asistente_update' id_capacitacion asistente.pk %}" class="btn btn-warning">Editar</a>
+  <a href="{% url 'asistente_delete' id_capacitacion asistente.pk %}" class="btn btn-danger">Eliminar</a>
+  <a href="{% url 'asistente_list' id_capacitacion %}" class="btn btn-secondary">Volver</a>
+{% endblock %}

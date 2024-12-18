@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Instructores</h2>
+  <a href="{% url 'instructor_create' %}" class="btn btn-primary mb-3">Crear Nuevo Instructor</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Celular</th>
+        <th>Correo</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for instructor in instructores %}
+        <tr>
+          <td>{{ instructor.nombre }}</td>
+          <td>{{ instructor.celular }}</td>
+          <td>{{ instructor.correo }}</td>
+          <td>
+            <a href="{% url 'instructor_detail' instructor.pk %}" class="btn btn-info btn-sm">Ver</a>
+            <a href="{% url 'instructor_update' instructor.pk %}" class="btn btn-warning btn-sm">Editar</a>
+            <a href="{% url 'instructor_delete' instructor.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

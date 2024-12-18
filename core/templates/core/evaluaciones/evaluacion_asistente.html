@@ -1,0 +1,39 @@
+{% extends 'core/base_registro.html' %}
+
+{% block content %}
+{% if asistente.activo == 'SI' %}
+<div class="container mt-4">
+    <h1 class="mb-4">Evaluación para el curso: {{ evaluacion.curso.nombre }}</h1>
+    <h3 class="mb-4">Nombre: {{ asistente.nombre }}</h3>
+    <form method="post" action="{% url 'guardar_respuestas' evaluacion.curso.id asistente.id %}">
+        {% csrf_token %}
+        
+        {% for pregunta in preguntas %}
+        <div class="card mb-3">
+            <div class="card-header bg-secondary text-white">
+                {{ forloop.counter }}. {{ pregunta.pregunta }}
+            </div>
+            <div class="card-body">
+                {% for respuesta in pregunta.respuestas_shuffled %}
+                <div class="form-check">
+                    <input 
+                        class="form-check-input" 
+                        type="radio" 
+                        name="respuesta_{{ pregunta.id }}" 
+                        value="{{ respuesta.id }}" 
+                        id="respuesta_{{ respuesta.id }}"
+                    >
+                    <label class="form-check-label" for="respuesta_{{ respuesta.id }}">
+                        {{ respuesta.respuesta }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary mt-3">Enviar Respuestas</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
