@@ -15,6 +15,7 @@ import random
 from django.http import JsonResponse
 import json
 from xhtml2pdf import pisa
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from .models import *
 from .forms import *
@@ -23,59 +24,59 @@ def index(request):
     template_name = 'core/index.html'
     return render(request, template_name)
 
-class CursoListView(ListView):
+class CursoListView(LoginRequiredMixin,ListView):
     model = Curso
     template_name = 'core/cursos/curso_list.html'
     context_object_name = 'cursos'
 
-class CursoDetailView(DetailView):
+class CursoDetailView(LoginRequiredMixin,DetailView):
     model = Curso
     template_name = 'core/cursos/curso_detail.html'
     context_object_name = 'curso'
 
-class CursoCreateView(CreateView):
+class CursoCreateView(LoginRequiredMixin,CreateView):
     model = Curso
     form_class = CursoForm
     template_name = 'core/cursos/curso_form.html'
     success_url = reverse_lazy('curso_list')
 
-class CursoUpdateView(UpdateView):
+class CursoUpdateView(LoginRequiredMixin,UpdateView):
     model = Curso
     form_class = CursoForm
     template_name = 'core/cursos/curso_form.html'
     success_url = reverse_lazy('curso_list')
 
-class CursoDeleteView(DeleteView):
+class CursoDeleteView(LoginRequiredMixin,DeleteView):
     model = Curso
     template_name = 'core/cursos/curso_confirm_delete.html'
     success_url = reverse_lazy('curso_list')
 
 # Vistas para capacitacion
-class CapacitacionListView(ListView):
+class CapacitacionListView(LoginRequiredMixin,ListView):
     model = Capacitacion
     template_name = 'core/capacitacion/capacitacion_list.html'
     context_object_name = 'capacitaciones'
 
-class CapacitacionCreateView(CreateView):
+class CapacitacionCreateView(LoginRequiredMixin,CreateView):
     model = Capacitacion
     form_class = CapacitacionForm  # Usa el formulario CapacitacionForm
     template_name = 'core/capacitacion/capacitacion_form.html'
 
-class CapacitacionUpdateView(UpdateView):
+class CapacitacionUpdateView(LoginRequiredMixin,UpdateView):
     model = Capacitacion
     form_class = CapacitacionForm  # Usa el formulario CapacitacionForm
     template_name = 'core/capacitacion/capacitacion_form.html'
 
-class CapacitacionDetailView(DetailView):
+class CapacitacionDetailView(LoginRequiredMixin,DetailView):
     model = Capacitacion
     template_name = 'core/capacitacion/capacitacion_detail.html'
 
-class CapacitacionDeleteView(DeleteView):
+class CapacitacionDeleteView(LoginRequiredMixin,DeleteView):
     model = Capacitacion
     template_name = 'core/capacitacion/capacitacion_confirm_delete.html'
     success_url = reverse_lazy('capacitacion_list')
 
-class CapacitacionFotoView(FormView):
+class CapacitacionFotoView(LoginRequiredMixin,FormView):
     template_name = "core/capacitacion/capacitacion_foto_form.html"
     form_class = CapacitacionFotoForm
 
@@ -129,7 +130,7 @@ def capacitacion_delete_foto(request, capacitacion_id, foto_id):
 
     return JsonResponse({"error": "Método no permitido."}, status=405)
 
-class CapacitacionFotosView(FormView):
+class CapacitacionFotosView(LoginRequiredMixin,FormView):
     template_name = "core/capacitacion/capacitacion_foto_reporte.html"
     form_class = CapacitacionFotoForm
 
@@ -160,7 +161,7 @@ def capacitacion_considera_foto(request, capacitacion_id, foto_id):
 
     return JsonResponse({"error": "Método no permitido."}, status=405)
 
-class CapacitacionPDF(View):
+class CapacitacionPDF(LoginRequiredMixin,View):
     def link_callback(self, uri, rel):
         # use short variable names
         sUrl = settings.STATIC_URL  # Typically /static/
@@ -209,26 +210,26 @@ class CapacitacionPDF(View):
         return response
 
 # Vistas para Instructor
-class InstructorListView(ListView):
+class InstructorListView(LoginRequiredMixin,ListView):
     model = Instructor
     template_name = 'core/instructores/instructor_list.html'
     context_object_name = 'instructores'
 
-class InstructorCreateView(CreateView):
+class InstructorCreateView(LoginRequiredMixin,CreateView):
     model = Instructor
     form_class = InstructorForm  # Usa el formulario InstructorForm
     template_name = 'core/instructores/instructor_form.html'
 
-class InstructorUpdateView(UpdateView):
+class InstructorUpdateView(LoginRequiredMixin,UpdateView):
     model = Instructor
     form_class = InstructorForm  # Usa el formulario InstructorForm
     template_name = 'core/instructores/instructor_form.html'
 
-class InstructorDetailView(DetailView):
+class InstructorDetailView(LoginRequiredMixin,DetailView):
     model = Instructor
     template_name = 'core/instructores/instructor_detail.html'
 
-class InstructorDeleteView(DeleteView):
+class InstructorDeleteView(LoginRequiredMixin,DeleteView):
     model = Instructor
     template_name = 'core/instructores/instructor_confirm_delete.html'
     success_url = reverse_lazy('instructor_list')  # Cambia esto a la URL que redirige después de la eliminación
@@ -243,32 +244,32 @@ class InstructorDeleteView(DeleteView):
             return render(request, 'instructor_error.html', {'error_message': error_message})
 
 # Vistas para Empresa
-class EmpresaListView(ListView):
+class EmpresaListView(LoginRequiredMixin,ListView):
     model = Empresa
     template_name = 'core/empresas/empresa_list.html'
     context_object_name = 'empresas'
 
-class EmpresaCreateView(CreateView):
+class EmpresaCreateView(LoginRequiredMixin,CreateView):
     model = Empresa
     form_class = EmpresaForm  # Usa el formulario EmpresaForm
     template_name = 'core/empresas/empresa_form.html'
 
-class EmpresaUpdateView(UpdateView):
+class EmpresaUpdateView(LoginRequiredMixin,UpdateView):
     model = Empresa
     form_class = EmpresaForm  # Usa el formulario EmpresaForm
     template_name = 'core/empresas/empresa_form.html'
 
-class EmpresaDetailView(DetailView):
+class EmpresaDetailView(LoginRequiredMixin,DetailView):
     model = Empresa
     template_name = 'core/empresas/empresa_detail.html'
 
-class EmpresaDeleteView(DeleteView):
+class EmpresaDeleteView(LoginRequiredMixin,DeleteView):
     model = Empresa
     template_name = 'core/empresas/empresa_confirm_delete.html'
     success_url = reverse_lazy('empresa_list')
 
 # Vistas para Asistente
-class AsistenteListView(ListView):
+class AsistenteListView(LoginRequiredMixin,ListView):
     model = Asistente
     template_name = 'core/asistentes/asistente_list.html'
     context_object_name = 'asistentes'
@@ -282,7 +283,7 @@ class AsistenteListView(ListView):
         context['capacitacion'] = self.capacitacion
         return context
 
-class AsistenteCreateView(CreateView):
+class AsistenteCreateView(LoginRequiredMixin,CreateView):
     model = Asistente
     form_class = AsistenteForm  # Usa el formulario AsistenteForm
     template_name = 'core/asistentes/asistente_form.html'
@@ -302,7 +303,7 @@ class AsistenteCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('asistente_list', kwargs={'capacitacion_id': self.kwargs['capacitacion_id']})
 
-class AsistenteUpdateView(UpdateView):
+class AsistenteUpdateView(LoginRequiredMixin,UpdateView):
     model = Asistente
     form_class = AsistenteForm  # Usa el formulario AsistenteForm
     template_name = 'core/asistentes/asistente_form.html'
@@ -321,7 +322,7 @@ class AsistenteUpdateView(UpdateView):
         return reverse_lazy('asistente_list', kwargs={'capacitacion_id': self.kwargs['capacitacion_id']})
 
 
-class AsistenteDetailView(DetailView):
+class AsistenteDetailView(LoginRequiredMixin,DetailView):
     model = Asistente
     template_name = 'core/asistentes/asistente_detail.html'
 
@@ -335,7 +336,7 @@ class AsistenteDetailView(DetailView):
         context['numero'] = asistente.nombre
         return context
 
-class AsistenteDeleteView(DeleteView):
+class AsistenteDeleteView(LoginRequiredMixin,DeleteView):
     model = Asistente
     template_name = 'core/asistentes/asistente_confirm_delete.html'
     success_url = reverse_lazy('asistente_list')
@@ -353,7 +354,7 @@ class AsistenteDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy('asistente_list', kwargs={'capacitacion_id': self.kwargs['capacitacion_id']})
 
-class EnviarQRView(View):
+class EnviarQRView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         # Obtener la capacitación por pk
         capacitacion = get_object_or_404(Capacitacion, pk=kwargs['pk'])
@@ -500,7 +501,7 @@ def generar_qr(capacitacion):
     qr.save(f"qr_capacitacion_{capacitacion.id}.png")
 
 # Vistas para Evaluación
-class EvaluacionDetailView(DetailView):
+class EvaluacionDetailView(LoginRequiredMixin,DetailView):
     model = Evaluacion
     template_name = 'core/evaluaciones/evaluacion_detail.html'
     context_object_name = 'evaluacion'
@@ -521,7 +522,7 @@ class EvaluacionDetailView(DetailView):
         context['preguntas_respuestas'] = preguntas_respuestas
         return context
 
-class PreguntaCreateView(CreateView):
+class PreguntaCreateView(LoginRequiredMixin,CreateView):
     model = Evaluacion_Pregunta
     fields = ['evaluacion', 'pregunta']
 
@@ -533,14 +534,14 @@ class PreguntaCreateView(CreateView):
 
         return redirect('evaluacion_detail', curso_id=curso_id)
 
-class PreguntaDeleteView(DeleteView):
+class PreguntaDeleteView(LoginRequiredMixin,DeleteView):
     model = Evaluacion_Pregunta
     template_name = 'evaluaciones/pregunta_confirm_delete.html'
 
     def get_success_url(self):
         return reverse_lazy('evaluacion_detail', kwargs={'curso_id': self.object.evaluacion.curso.id})
 
-class RespuestaCreateView(CreateView):
+class RespuestaCreateView(LoginRequiredMixin,CreateView):
     model = Evaluacion_Respuestas
     fields = ['evaluacion_pregunta', 'respuesta', 'correcta']
 
@@ -548,14 +549,14 @@ class RespuestaCreateView(CreateView):
         form.save()
         return redirect('evaluacion_detail', curso_id=form.instance.evaluacion_pregunta.evaluacion.curso.id)
 
-class RespuestaDeleteView(DeleteView):
+class RespuestaDeleteView(LoginRequiredMixin,DeleteView):
     model = Evaluacion_Respuestas
     fields = ['evaluacion_pregunta', 'respuesta', 'correcta']
 
     def get_success_url(self):
         return reverse_lazy('evaluacion_detail', kwargs={'curso_id': self.object.evaluacion_pregunta.evaluacion.curso.id})
 
-class EvaluacionAsistenteView(TemplateView):
+class EvaluacionAsistenteView(LoginRequiredMixin,TemplateView):
     template_name = "core/evaluaciones/evaluacion_asistente.html"
 
     def get_context_data(self, **kwargs):
@@ -581,7 +582,7 @@ class EvaluacionAsistenteView(TemplateView):
         context['preguntas'] = preguntas
         return context
 
-class GuardarRespuestasView(View):
+class GuardarRespuestasView(LoginRequiredMixin,View):
     def post(self, request, *args, **kwargs):
         evaluacion = get_object_or_404(Evaluacion, curso_id=kwargs['curso_id'])
         asistente = get_object_or_404(Asistente, pk=kwargs['asistente_id'])
@@ -623,7 +624,7 @@ class GuardarRespuestasView(View):
 #        return JsonResponse({"success": True, "correctas": correctas, "incorrectas": incorrectas})
         return redirect('resultado_evaluacion', curso_id=evaluacion.curso.id, asistente_id=kwargs['asistente_id'])
 
-class ResultadoEvaluacionView(View):
+class ResultadoEvaluacionView(LoginRequiredMixin,View):
     def get(self, request, curso_id, asistente_id):
         evaluacion = get_object_or_404(Evaluacion, curso_id=curso_id)
         asistente = get_object_or_404(Asistente, pk=asistente_id)
@@ -655,6 +656,6 @@ class ResultadoEvaluacionView(View):
         # Redirigir a la vista de despedida
         return redirect('despedida_evaluacion')
 
-class DespedidaEvaluacionView(View):
+class DespedidaEvaluacionView(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, 'core/evaluaciones/despedida.html')
