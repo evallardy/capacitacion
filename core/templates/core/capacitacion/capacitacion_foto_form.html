@@ -1,0 +1,124 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="container" style="padding: 15px;">
+    <div class="mapa" style="padding: 10px;">
+        <h2>Fotos de la capacitación {{ capacitacion.curso.nombre }} para la empresa {{ capacitacion.empresa.nombre }}
+        </h2>
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="capacitacionId" value="{{ capacitacion.id }}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <div class="card col-10 col-sm-8 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <div class="card-header">
+                        <label for="video">Cámara</label>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div style="padding: 0;">
+                            <div 
+                                style="background-color: white;">
+                                <video id="video" class="embed-responsive-item col-12" autoplay 
+                                    style="border-radius: 5px;"></video>
+                            </div>
+                            <div class="col-5" style="padding: 0 0 0 20px;" hidden>
+                                <label for="captured-photo">Foto Capturada</label>
+                                <canvas id="canvas" style="display:none;"></canvas>
+                                <input type="hidden" id="foto-data" name="foto">
+                                <div class="embed-responsive embed-responsive-16by9 mapa"
+                                    style="padding: 5px 10px 5px 10px; background-color: white;">
+                                    <img class="col-12" id="captured-photo" alt="Foto capturada"
+                                        style="display: {% if form.instance.foto %}block{% else %}none{% endif %};"
+                                        src="{% if form.instance.foto %}{{ form.instance.foto.url }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row justify-content-center align-items-center" style="height: 50px;">
+                            <div class="col-6 text-center">
+                                <button class="btn btn-dark" id="snap">Tomar Foto</button>
+                            </div>
+                            <div class="col-6 text-center">
+                                <a class="btn btn-secondary" href="{% url 'capacitacion_list' %}">Regresar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 card mt-2">
+                    <div class="card-header">
+                        Fotos tomadas
+                    </div>
+                    <div class="row card-body" style="padding: 0;">
+                        {% for foto in fotos %}
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xl-3 col-xxl-3 mt-2">
+                            <div class="card" style="background-color: lightgray;">
+                                <img src="{{ foto.foto.url }}" class="card-img-top" alt="Foto">
+                                <div class="card-body text-center" style="padding: 0;">
+                                    <button class="btn btn-danger eliminar-foto"
+                                        data-id="{{ foto.id }}">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted mt-3 ms-3" style="font-weight: bold;">No hay fotos tomadas aún.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.body.addEventListener('click', function (event) {
+            if (event.target.classList.contains('eliminar-foto')) {
+                const fotoId = event.target.getAttribute('data-id');
+                const capacitacionId = document.getElementById('capacitacionId').value; // O de otra forma
+                const url = '/core/capacitacion/' + capacitacionId + '/foto/' + fotoId + '/eliminar/';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST', // Cambiado a DELETE
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Incluye el CSRF token
+                    },
+                });
+            }
+        });
+    });
+
+    // Acceder a la cámara
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+            var video = document.getElementById('video');
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function (err) {
+            console.log("An error occurred: " + err);
+        });
+
+    // Tomar una foto cuando se haga clic en el botón
+    document.getElementById('snap').addEventListener('click', function () {
+        var canvas = document.getElementById('canvas');
+        var video = document.getElementById('video');
+        var capturedPhoto = document.getElementById('captured-photo');
+
+        var aspectRatio = video.videoWidth / video.videoHeight;
+        var targetHeight = 150;
+        var targetWidth = targetHeight * aspectRatio;
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
+
+        // Convertir la imagen del canvas a un dato URL (base64)
+        var dataURL = canvas.toDataURL('image/png');
+        document.getElementById('foto-data').value = dataURL;
+
+        // Mostrar la imagen capturada en el elemento <img>
+        capturedPhoto.src = dataURL;
+        capturedPhoto.style.display = 'block';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="container" style="padding: 15px;">
+    <div class="mapa" style="padding: 10px;">
+        <h2>Fotos de la capacitación {{ capacitacion.curso.nombre }} para la empresa {{ capacitacion.empresa.nombre }}
+        </h2>
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="capacitacionId" value="{{ capacitacion.id }}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <div>
+                    <a class="btn btn-secondary" href="{% url 'capacitacion_list' %}">Regresar</a>
+                </div>
+                <div class="col-12 card mt-2">
+                    <div class="card-header">
+                        Fotos tomadas para considerar o no en el reporte
+                    </div>
+                    <div class="row card-body" style="padding: 0;">
+                        {% for foto in fotos %}
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xl-3 col-xxl-3">
+                            <div class="card mt-2 ms-2 mb-2 mr-2" 
+                            {% if foto.activar_para_reporte %}
+                            style="background-color: green;"
+                            {% else %}
+                            style="background-color: red;"
+                            {% endif %}
+                            >
+                                <img src="{{ foto.foto.url }}" class="card-img-top" alt="Foto">
+                                <div class="card-body text-center" style="padding: 0;">
+                                    <button class="btn btn-info considerar-foto"
+                                        data-id="{{ foto.id }}">
+                                        {% if foto.activar_para_reporte %}
+                                        No Considerar
+                                        {% else %}
+                                        Considerar
+                                        {% endif %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted mt-3 ms-3" style="font-weight: bold;">No hay fotos tomadas aún.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.body.addEventListener('click', function (event) {
+            if (event.target.classList.contains('considerar-foto')) {
+                const fotoId = event.target.getAttribute('data-id');
+                const capacitacionId = document.getElementById('capacitacionId').value; // O de otra forma
+                const url = '/core/capacitacion/' + capacitacionId + '/foto/' + fotoId + '/considerar/';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST', // Cambiado a DELETE
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Incluye el CSRF token
+                    },
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

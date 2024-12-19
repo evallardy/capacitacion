@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Capacitaciones</h2>
+<a href="{% url 'capacitacion_create' %}" class="btn btn-primary mb-3">Crear Capacitación</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Inicio</th>
+            <th>Duración</th>
+            <th>Instructor</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for capacitacion in capacitaciones %}
+        <tr>
+            <td>{{ capacitacion.curso.nombre }}</td>
+            <td>{{ capacitacion.inicio }}</td>
+            <td>{{ capacitacion.duracion }} {{ capacitacion.unidad_duracion }}</td>
+            <td>{{ capacitacion.instructor.nombre }}</td>
+            <td>
+                <a href="{% url 'capacitacion_detail' capacitacion.pk %}" class="btn btn-info btn-sm">Ver</a>
+                <a href="{% url 'capacitacion_update' capacitacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                <a href="{% url 'capacitacion_delete' capacitacion.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                <a href="{% url 'enviar_qr' capacitacion.pk %}" class="btn btn-primary btn-sm">Correo</a>
+                <a href="{% url 'asistente_list' capacitacion.pk %}" class="btn btn-primary btn-sm">Asistentes</a>
+                <a href="{% url 'capacitacion_foto' capacitacion.pk %}" class="btn btn-primary btn-sm">Fotos</a>
+                <a href="{% url 'capacitacion_fotos' capacitacion.pk %}" class="btn btn-primary btn-sm">Fotos Reporte</a>
+                <a href="{% url 'capacitacionPDF' capacitacion.pk %}" class="btn btn-primary btn-sm">Fotos Reporte</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
