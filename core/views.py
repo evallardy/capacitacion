@@ -53,30 +53,30 @@ class CursoDeleteView(DeleteView):
 # Vistas para capacitacion
 class CapacitacionListView(ListView):
     model = Capacitacion
-    template_name = 'core/Capacitacion/capacitacion_list.html'
+    template_name = 'core/capacitacion/capacitacion_list.html'
     context_object_name = 'capacitaciones'
 
 class CapacitacionCreateView(CreateView):
     model = Capacitacion
     form_class = CapacitacionForm  # Usa el formulario CapacitacionForm
-    template_name = 'core/Capacitacion/capacitacion_form.html'
+    template_name = 'core/capacitacion/capacitacion_form.html'
 
 class CapacitacionUpdateView(UpdateView):
     model = Capacitacion
     form_class = CapacitacionForm  # Usa el formulario CapacitacionForm
-    template_name = 'core/Capacitacion/capacitacion_form.html'
+    template_name = 'core/capacitacion/capacitacion_form.html'
 
 class CapacitacionDetailView(DetailView):
     model = Capacitacion
-    template_name = 'core/Capacitacion/capacitacion_detail.html'
+    template_name = 'core/capacitacion/capacitacion_detail.html'
 
 class CapacitacionDeleteView(DeleteView):
     model = Capacitacion
-    template_name = 'core/Capacitacion/capacitacion_confirm_delete.html'
+    template_name = 'core/capacitacion/capacitacion_confirm_delete.html'
     success_url = reverse_lazy('capacitacion_list')
 
 class CapacitacionFotoView(FormView):
-    template_name = "core/Capacitacion/capacitacion_foto_form.html"
+    template_name = "core/capacitacion/capacitacion_foto_form.html"
     form_class = CapacitacionFotoForm
 
     def get_context_data(self, **kwargs):
@@ -130,7 +130,7 @@ def capacitacion_delete_foto(request, capacitacion_id, foto_id):
     return JsonResponse({"error": "Método no permitido."}, status=405)
 
 class CapacitacionFotosView(FormView):
-    template_name = "core/Capacitacion/capacitacion_foto_reporte.html"
+    template_name = "core/capacitacion/capacitacion_foto_reporte.html"
     form_class = CapacitacionFotoForm
 
     def get_context_data(self, **kwargs):
