@@ -85,40 +85,56 @@
                 });
             }
         });
-    });
 
-    // Acceder a la cámara
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function (stream) {
+        // Acceder a la cámara
+        navigator.mediaDevices.enumerateDevices()
+            .then(function(devices) {
+                let frontCamera = null;
+                devices.forEach(function(device) {
+                    if (device.kind === 'videoinput' && device.label.toLowerCase().includes('front')) {
+                        frontCamera = device.deviceId;
+                    }
+                });
+
+                const constraints = {
+                    video: {
+                        deviceId: frontCamera ? { exact: frontCamera } : undefined
+                    }
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (stream) {
+                        var video = document.getElementById('video');
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(function (err) {
+                        console.log("An error occurred: " + err);
+                    });
+            });
+
+        // Tomar una foto cuando se haga clic en el botón
+        document.getElementById('snap').addEventListener('click', function () {
+            var canvas = document.getElementById('canvas');
             var video = document.getElementById('video');
-            video.srcObject = stream;
-            video.play();
-        })
-        .catch(function (err) {
-            console.log("An error occurred: " + err);
+            var capturedPhoto = document.getElementById('captured-photo');
+
+            var aspectRatio = video.videoWidth / video.videoHeight;
+            var targetHeight = 150;
+            var targetWidth = targetHeight * aspectRatio;
+
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
+
+            // Convertir la imagen del canvas a un dato URL (base64)
+            var dataURL = canvas.toDataURL('image/png');
+            document.getElementById('foto-data').value = dataURL;
+
+            // Mostrar la imagen capturada en el elemento <img>
+            capturedPhoto.src = dataURL;
+            capturedPhoto.style.display = 'block';
         });
-
-    // Tomar una foto cuando se haga clic en el botón
-    document.getElementById('snap').addEventListener('click', function () {
-        var canvas = document.getElementById('canvas');
-        var video = document.getElementById('video');
-        var capturedPhoto = document.getElementById('captured-photo');
-
-        var aspectRatio = video.videoWidth / video.videoHeight;
-        var targetHeight = 150;
-        var targetWidth = targetHeight * aspectRatio;
-
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
-
-        // Convertir la imagen del canvas a un dato URL (base64)
-        var dataURL = canvas.toDataURL('image/png');
-        document.getElementById('foto-data').value = dataURL;
-
-        // Mostrar la imagen capturada en el elemento <img>
-        capturedPhoto.src = dataURL;
-        capturedPhoto.style.display = 'block';
     });
 </script>
 {% endblock %}
