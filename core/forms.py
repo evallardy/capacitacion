@@ -74,11 +74,12 @@ class InstructorForm(forms.ModelForm):
 class EmpresaForm(forms.ModelForm):
     class Meta:
         model = Empresa
-        fields = ['nombre', 'direccion', 'contacto']
+        fields = ['nombre', 'direccion', 'contacto', 'correo']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'direccion': forms.Textarea(attrs={'class': 'form-control'}),
             'contacto': forms.TextInput(attrs={'class': 'form-control'}),
+            'correo': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 class AsistenteForm(forms.ModelForm):

@@ -1,8 +1,9 @@
 {% extends 'core/base.html' %}
 {% block content %}
   <div class="container mt-4">
-    <h2>Cursos</h2>
-    <a href="{% url 'curso_create' %}" class="btn btn-primary mb-3">Crear Curso</a>
+    <h2>Temas</h2>
+    <a href="{% url 'curso_create' %}" class="btn btn-primary mb-3">Crear Tema</a>
+    <a href="{% url 'capacitacion_list' %}" class="btn btn-secondary mb-3">Regresar Cursos</a>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -24,7 +25,7 @@
               <a href="{% url 'curso_detail' curso.pk %}" class="btn btn-info btn-sm">Ver</a>
               <a href="{% url 'curso_update' curso.pk %}" class="btn btn-warning btn-sm">Editar</a>
               <a href="{% url 'curso_delete' curso.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
-              <a href="{% url 'evaluacion_detail' curso.pk %}" class="btn btn-info btn-sm">Evaluación</a>
+              <a href="{% url 'evaluacion_detail' curso.pk %}" class="btn btn-info btn-sm">Cuestionario</a>
             </td>
           </tr>
         {% endfor %}

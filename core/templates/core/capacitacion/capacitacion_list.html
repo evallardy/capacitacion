@@ -1,12 +1,13 @@
 {% extends 'core/base.html' %}
 
 {% block content %}
-<h2>Capacitaciones</h2>
-<a href="{% url 'capacitacion_create' %}" class="btn btn-primary mb-3">Crear Capacitación</a>
+<h2>Cursos</h2>
+<a href="{% url 'capacitacion_create' %}" class="btn btn-primary mb-3">Crear Curso</a>
+<a class="btn btn-info mb-3" href="{% url 'curso_list' %}">Temas</a>
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Nombre</th>
+            <th>Tema</th>
             <th>Inicio</th>
             <th>Duración</th>
             <th>Instructor</th>

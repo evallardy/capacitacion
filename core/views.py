@@ -362,7 +362,7 @@ class EnviarQRView(LoginRequiredMixin,View):
         # Crear el formulario
         form = CorreoForm(initial={
 #            'destinatario': capacitacion.empresa.correo,
-            'destinatario': 'evallardy@gmail.com',
+            'destinatario': capacitacion.empresa.correo,
             'asunto': f'QR para registro de la Capacitación {capacitacion.curso.nombre}',
             'contenido': f'Este correo contiene el QR para registro de la capacitación "{capacitacion.curso.nombre}".',
         })

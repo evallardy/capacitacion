@@ -31,8 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'curso_list' %}">Cursos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'capacitacion_list' %}">Capacitaciones</a>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'capacitacion_list' %}">Cursos</a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'instructor_list' %}">Instructores</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'empresa_list' %}">Empresas</a></li>
