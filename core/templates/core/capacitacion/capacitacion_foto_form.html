@@ -140,16 +140,18 @@
             // Obtener el contexto 2D del canvas
             var ctx = canvas.getContext('2d');
 
-            // Verificar si la imagen capturada es vertical y rotarla si es necesario
+            // Verificar si la cámara está en modo vertical y ajustar la orientación
             if (video.videoWidth < video.videoHeight) {
-                // Si el video está en modo vertical, rotamos la imagen a 90 grados
+                // Si el video está en modo vertical (por ejemplo, cuando la cámara está en modo retrato)
+                // Rotamos la imagen 90 grados a la derecha
                 ctx.save();
                 ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
                 ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
                 ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
                 ctx.restore();
             } else {
-                // Si el video ya está en modo horizontal, dibujamos la imagen sin rotación
+                // Si el video ya está en modo horizontal (por ejemplo, cámara en paisaje)
+                // Dibujamos la imagen tal cual
                 ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
             }
 
@@ -161,6 +163,7 @@
             capturedPhoto.src = dataURL;
             capturedPhoto.style.display = 'block';
         });
+
     });
 </script>
 {% endblock %}
