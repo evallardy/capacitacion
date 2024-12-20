@@ -433,7 +433,7 @@ class EnviarQRView(LoginRequiredMixin,View):
 
             # Preparar el correo
             # from_email = settings.EMAIL_HOST_USER
-            from_email = 'capacitacion@correo.com'
+            from_email = 'soporte@iagmexico.com'
             recipient_list = [destinatario]  # Usar el correo proporcionado por el usuario
 
             # Crear el mensaje del correo
