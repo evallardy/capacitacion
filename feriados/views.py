@@ -4,28 +4,29 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from datetime import timedelta
 import holidays
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from .models import DiaFestivo
 from .forms import *
 
-class DiaFestivoListView(ListView):
+class DiaFestivoListView(LoginRequiredMixin, ListView):
     model = DiaFestivo
     template_name = "feriados/diafestivo_list.html"
     context_object_name = "dias_festivos"
 
-class DiaFestivoCreateView(CreateView):
+class DiaFestivoCreateView(LoginRequiredMixin, CreateView):
     model = DiaFestivo
     form_class = DiaFestivoForm
     template_name = "feriados/diafestivo_form.html"
     success_url = reverse_lazy('diafestivo_list')
 
-class DiaFestivoUpdateView(UpdateView):
+class DiaFestivoUpdateView(LoginRequiredMixin, UpdateView):
     model = DiaFestivo
     form_class = DiaFestivoForm
     template_name = "feriados/diafestivo_form.html"
     success_url = reverse_lazy('diafestivo_list')
 
-class DiaFestivoDeleteView(DeleteView):
+class DiaFestivoDeleteView(LoginRequiredMixin, DeleteView):
     model = DiaFestivo
     template_name = "feriados/diafestivo_confirm_delete.html"
     success_url = reverse_lazy('diafestivo_list')
