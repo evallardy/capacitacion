@@ -89,16 +89,20 @@
         // Acceder a la cámara
         navigator.mediaDevices.enumerateDevices()
             .then(function(devices) {
-                let frontCamera = null;
+                let rearCamera = null;
                 devices.forEach(function(device) {
-                    if (device.kind === 'videoinput' && device.label.toLowerCase().includes('front')) {
-                        frontCamera = device.deviceId;
+                    if (device.kind === 'videoinput') {
+                        // Seleccionamos la cámara trasera si está disponible
+                        if (device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear')) {
+                            rearCamera = device.deviceId;
+                        }
                     }
                 });
 
+                // Si encontramos la cámara trasera, la usamos, si no, la primera cámara disponible
                 const constraints = {
                     video: {
-                        deviceId: frontCamera ? { exact: frontCamera } : undefined
+                        deviceId: rearCamera ? { exact: rearCamera } : undefined
                     }
                 };
 
@@ -111,6 +115,9 @@
                     .catch(function (err) {
                         console.log("An error occurred: " + err);
                     });
+            })
+            .catch(function (err) {
+                console.log("An error occurred while accessing devices: " + err);
             });
 
         // Tomar una foto cuando se haga clic en el botón
