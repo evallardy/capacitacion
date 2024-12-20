@@ -125,35 +125,14 @@
             var canvas = document.getElementById('canvas');
             var video = document.getElementById('video');
             var capturedPhoto = document.getElementById('captured-photo');
-            
-            // Obtener las dimensiones del video
-            var aspectRatio = video.videoWidth / video.videoHeight;
-            var targetHeight = 600;  // Altura fija
 
-            // Calculamos el ancho a partir de la altura, manteniendo la proporción
+            var aspectRatio = video.videoWidth / video.videoHeight;
+            var targetHeight = 600;
             var targetWidth = targetHeight * aspectRatio;
 
-            // Configurar las dimensiones del canvas para la imagen horizontal
             canvas.width = targetWidth;
             canvas.height = targetHeight;
-
-            // Obtener el contexto 2D del canvas
-            var ctx = canvas.getContext('2d');
-
-            // Verificar si la cámara está en modo vertical y ajustar la orientación
-            if (video.videoWidth < video.videoHeight) {
-                // Si el video está en modo vertical (por ejemplo, cuando la cámara está en modo retrato)
-                // Rotamos la imagen 90 grados a la derecha
-                ctx.save();
-                ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
-//                ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
-                ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
-                ctx.restore();
-            } else {
-                // Si el video ya está en modo horizontal (por ejemplo, cámara en paisaje)
-                // Dibujamos la imagen tal cual
-                ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
-            }
+            canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
 
             // Convertir la imagen del canvas a un dato URL (base64)
             var dataURL = canvas.toDataURL('image/png');
@@ -163,7 +142,6 @@
             capturedPhoto.src = dataURL;
             capturedPhoto.style.display = 'block';
         });
-
     });
 </script>
 {% endblock %}
