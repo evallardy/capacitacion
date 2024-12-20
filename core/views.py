@@ -445,11 +445,11 @@ class EnviarQRView(LoginRequiredMixin,View):
             )
 
             # Adjuntar la imagen del QR al correo
-#            email.attach(
-#                f"qr_capacitacion_{capacitacion.pk}.png",  # Nombre del archivo
-#                img_io.getvalue(),  # Imagen en formato binario
-#                "image/png"  # Tipo de contenido
-#            )
+            email.attach(
+                f"qr_capacitacion_{capacitacion.pk}.png",  # Nombre del archivo
+                img_io.getvalue(),  # Imagen en formato binario
+                "image/png"  # Tipo de contenido
+            )
 
             # Enviar el correo
             try:
