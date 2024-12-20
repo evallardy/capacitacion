@@ -19,7 +19,7 @@ class CursoForm(forms.ModelForm):
 class CapacitacionForm(forms.ModelForm):
     class Meta:
         model = Capacitacion
-        fields = ['empresa', 'curso', 'instructor', 'duracion', 'unidad_duracion', 'horas_diarias',  
+        fields = ['empresa', 'curso', 'instructor', 'unidad_duracion', 'duracion', 'horas_diarias',  
                     'inicio', 'direccion', 'costo', 'notas', 'estado', 'activar_evaluacion',
                     ]
         widgets = {
@@ -28,15 +28,28 @@ class CapacitacionForm(forms.ModelForm):
             'duracion': forms.NumberInput(attrs={'class': 'form-control'}),
             'unidad_duracion': forms.Select(attrs={'class': 'form-control'}),
             'inicio': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M'),
-            'direccion': forms.Textarea(attrs={'class': 'form-control'}),
+            'direccion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'costo': forms.NumberInput(attrs={'class': 'form-control'}),
             'instructor': forms.Select(attrs={'class': 'form-control'}),
-            'notas': forms.Textarea(attrs={'class': 'form-control'}),
+            'notas': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
             'horas_diarias': forms.NumberInput(attrs={'class': 'form-control'}),
             'activar_evaluacion': forms.Select(attrs={'class': 'form-control'}),
         }
-
+        labels = {
+            'empresa': 'Empresa:',
+            'curso': 'Curso:',
+            'instructor': 'Instructor:',
+            'unidad_duracion': 'Unidad de duración:',
+            'duracion': 'Duración (en horas):',
+            'horas_diarias': 'Horas diarias:',
+            'inicio': 'Fecha y hora de inicio:',
+            'direccion': 'Dirección:',
+            'costo': 'Costo:',
+            'notas': 'Notas:',
+            'estado': 'Estado:',
+            'activar_evaluacion': 'Activar evaluación:',
+        }
 class CapacitacionFotoForm(forms.ModelForm):
     class Meta:
         model = CapacitacionFoto
