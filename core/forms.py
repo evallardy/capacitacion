@@ -48,7 +48,7 @@ class CapacitacionForm(forms.ModelForm):
             'costo': 'Costo:',
             'notas': 'Notas:',
             'estado': 'Estado:',
-            'activar_evaluacion': 'Activar evaluación:',
+            'activar_evaluacion': 'Act.eval.:',
         }
 class CapacitacionFotoForm(forms.ModelForm):
     class Meta:
