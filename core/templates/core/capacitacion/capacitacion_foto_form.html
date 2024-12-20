@@ -86,7 +86,7 @@
             }
         });
 
-        // Acceder a la cámara
+        // Acceder a la cámara con la mejor calidad posible
         navigator.mediaDevices.enumerateDevices()
             .then(function(devices) {
                 let rearCamera = null;
@@ -102,7 +102,10 @@
                 // Si encontramos la cámara trasera, la usamos, si no, la primera cámara disponible
                 const constraints = {
                     video: {
-                        deviceId: rearCamera ? { exact: rearCamera } : undefined
+                        deviceId: rearCamera ? { exact: rearCamera } : undefined,
+                        width: { ideal: 1920 },   // Resolución de ancho ideal de 1920px
+                        height: { ideal: 1080 },  // Resolución de alto ideal de 1080px
+                        facingMode: 'environment' // Usar la cámara trasera
                     }
                 };
 
@@ -126,8 +129,9 @@
             var video = document.getElementById('video');
             var capturedPhoto = document.getElementById('captured-photo');
 
+            // Usar el tamaño completo del video para la foto (mejor calidad posible)
             var aspectRatio = video.videoWidth / video.videoHeight;
-            var targetHeight = 150;
+            var targetHeight = video.videoHeight;
             var targetWidth = targetHeight * aspectRatio;
 
             canvas.width = targetWidth;
@@ -143,5 +147,6 @@
             capturedPhoto.style.display = 'block';
         });
     });
+
 </script>
 {% endblock %}
