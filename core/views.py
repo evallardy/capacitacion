@@ -374,7 +374,7 @@ class EnviarQRView(LoginRequiredMixin,View):
             box_size=10,
             border=4,
         )
-        qr_data = f'https//descapa.iagmexico.com/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
+        qr_data = f'https://descapa.iagmexico.com/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
         qr.add_data(qr_data)
         qr.make(fit=True)
         
@@ -415,7 +415,7 @@ class EnviarQRView(LoginRequiredMixin,View):
                 box_size=10,
                 border=4,
             )
-            qr_data = f'https//descapa.iagmaxico.com/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
+            qr_data = f'https://descapa.iagmexico.com/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
 #            qr_data = f'//localhost:8000/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
             qr.add_data(qr_data)
             qr.make(fit=True)
