@@ -140,10 +140,10 @@
             ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
             ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
             ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
-            ctx.restore();
+            ctx.save();
 
             // Convertir la imagen del canvas a un dato URL (base64)
-            var dataURL = ctx.toDataURL('image/png');
+            var dataURL = canvas.toDataURL('image/png');
             document.getElementById('foto-data').value = dataURL;
 
             // Mostrar la imagen capturada en el elemento <img>
