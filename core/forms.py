@@ -19,7 +19,7 @@ class CursoForm(forms.ModelForm):
 class CapacitacionForm(forms.ModelForm):
     class Meta:
         model = Capacitacion
-        fields = ['empresa', 'curso', 'instructor', 'unidad_duracion', 'duracion', 'horas_diarias',  
+        fields = ['empresa', 'curso', 'instructor', 'duracion', 'unidad_duracion', 'horas_diarias',  
                     'inicio', 'direccion', 'costo', 'notas', 'estado', 'activar_evaluacion',
                     ]
         widgets = {
@@ -40,10 +40,10 @@ class CapacitacionForm(forms.ModelForm):
             'empresa': 'Empresa:',
             'curso': 'Curso:',
             'instructor': 'Instructor:',
-            'unidad_duracion': 'Unidad de duración:',
-            'duracion': 'Duración (en horas):',
-            'horas_diarias': 'Horas diarias:',
-            'inicio': 'Fecha y hora de inicio:',
+            'unidad_duracion': 'Unidad:',
+            'duracion': 'Duración:',
+            'horas_diarias': 'diarias:',
+            'inicio': 'Inicio:',
             'direccion': 'Dirección:',
             'costo': 'Costo:',
             'notas': 'Notas:',
