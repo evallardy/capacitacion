@@ -146,7 +146,7 @@
                 // Rotamos la imagen 90 grados a la derecha
                 ctx.save();
                 ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
-                ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
+//                ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
                 ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
                 ctx.restore();
             } else {
