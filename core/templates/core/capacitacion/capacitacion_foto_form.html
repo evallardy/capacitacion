@@ -70,83 +70,83 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        document.body.addEventListener('click', function (event) {
-            if (event.target.classList.contains('eliminar-foto')) {
-                const fotoId = event.target.getAttribute('data-id');
-                const capacitacionId = document.getElementById('capacitacionId').value; // O de otra forma
-                const url = '/core/capacitacion/' + capacitacionId + '/foto/' + fotoId + '/eliminar/';
+    document.body.addEventListener('click', function (event) {
+        if (event.target.classList.contains('eliminar-foto')) {
+            const fotoId = event.target.getAttribute('data-id');
+            const capacitacionId = document.getElementById('capacitacionId').value; // O de otra forma
+            const url = '/core/capacitacion/' + capacitacionId + '/foto/' + fotoId + '/eliminar/';
 
-                $.ajax({
-                    url: url,
-                    type: 'POST', // Cambiado a DELETE
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Incluye el CSRF token
-                    },
-                });
-            }
-        });
+            $.ajax({
+                url: url,
+                type: 'POST', // Cambiado a DELETE
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Incluye el CSRF token
+                },
+            });
+        }
+    });
 
-        // Acceder a la cámara con la mejor calidad posible
-        navigator.mediaDevices.enumerateDevices()
-            .then(function(devices) {
-                let rearCamera = null;
-                devices.forEach(function(device) {
-                    if (device.kind === 'videoinput') {
-                        // Seleccionamos la cámara trasera si está disponible
-                        if (device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear')) {
-                            rearCamera = device.deviceId;
-                        }
+    // Acceder a la cámara con la mejor calidad posible
+    navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+            let rearCamera = null;
+            devices.forEach(function(device) {
+                if (device.kind === 'videoinput') {
+                    // Seleccionamos la cámara trasera si está disponible
+                    if (device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear')) {
+                        rearCamera = device.deviceId;
                     }
-                });
-
-                // Si encontramos la cámara trasera, la usamos, si no, la primera cámara disponible
-                const constraints = {
-                    video: {
-                        deviceId: rearCamera ? { exact: rearCamera } : undefined,
-                        width: { ideal: 1920 },   // Resolución de ancho ideal de 1920px
-                        height: { ideal: 1080 },  // Resolución de alto ideal de 1080px
-                        facingMode: 'environment' // Usar la cámara trasera
-                    }
-                };
-
-                navigator.mediaDevices.getUserMedia(constraints)
-                    .then(function (stream) {
-                        var video = document.getElementById('video');
-                        video.srcObject = stream;
-                        video.play();
-                    })
-                    .catch(function (err) {
-                        console.log("An error occurred: " + err);
-                    });
-            })
-            .catch(function (err) {
-                console.log("An error occurred while accessing devices: " + err);
+                }
             });
 
-        // Tomar una foto cuando se haga clic en el botón
-        document.getElementById('snap').addEventListener('click', function () {
-            var canvas = document.getElementById('canvas');
-            var video = document.getElementById('video');
-            var capturedPhoto = document.getElementById('captured-photo');
+            // Si encontramos la cámara trasera, la usamos, si no, la primera cámara disponible
+            const constraints = {
+                video: {
+                    deviceId: rearCamera ? { exact: rearCamera } : undefined,
+                    width: { ideal: 1920 },   // Resolución de ancho ideal de 1920px
+                    height: { ideal: 1080 },  // Resolución de alto ideal de 1080px
+                    facingMode: 'environment' // Usar la cámara trasera
+                }
+            };
 
-            // Usar el tamaño completo del video para la foto (mejor calidad posible)
-            var aspectRatio = video.videoWidth / video.videoHeight;
-            var targetHeight = video.videoHeight;
-            var targetWidth = targetHeight * aspectRatio;
-
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
-
-            // Convertir la imagen del canvas a un dato URL (base64)
-            var dataURL = canvas.toDataURL('image/png');
-            document.getElementById('foto-data').value = dataURL;
-
-            // Mostrar la imagen capturada en el elemento <img>
-            capturedPhoto.src = dataURL;
-            capturedPhoto.style.display = 'block';
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function (stream) {
+                    var video = document.getElementById('video');
+                    video.srcObject = stream;
+                    video.play();
+                })
+                .catch(function (err) {
+                    console.log("An error occurred: " + err);
+                });
+        })
+        .catch(function (err) {
+            console.log("An error occurred while accessing devices: " + err);
         });
+
+    // Tomar una foto cuando se haga clic en el botón
+    document.getElementById('snap').addEventListener('click', function () {
+        var canvas = document.getElementById('canvas');
+        var video = document.getElementById('video');
+        var capturedPhoto = document.getElementById('captured-photo');
+
+        // Usar el tamaño completo del video para la foto (mejor calidad posible)
+        var aspectRatio = video.videoWidth / video.videoHeight;
+        var targetHeight = video.videoHeight;
+        var targetWidth = targetHeight * aspectRatio;
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
+
+        // Convertir la imagen del canvas a un dato URL (base64)
+        var dataURL = canvas.toDataURL('image/png');
+        document.getElementById('foto-data').value = dataURL;
+
+        // Mostrar la imagen capturada en el elemento <img>
+        capturedPhoto.src = dataURL;
+        capturedPhoto.style.display = 'block';
     });
+});
 
 </script>
 {% endblock %}
