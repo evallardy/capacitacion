@@ -135,10 +135,8 @@
 
             var ctx = canvas.getContext('2d');  //.drawImage(video, 0, 0, targetWidth, targetHeight);
 
-            ctx.save();
-
             ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
-            ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
+            ctx.rotate(180 * Math.PI / 180);  // Rotación de 90 grados en radianes
             ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
             ctx.save();
 
