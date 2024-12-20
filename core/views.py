@@ -362,7 +362,7 @@ class EnviarQRView(LoginRequiredMixin,View):
         # Crear el formulario
         form = CorreoForm(initial={
 #            'destinatario': capacitacion.empresa.correo,
-            'destinatario': 'd42925875de988@inbox.mailtrap.io',
+            'destinatario': 'evallardy@gmail.com',
             'asunto': f'QR para registro de la Capacitación {capacitacion.curso.nombre}',
             'contenido': f'Este correo contiene el QR para registro de la capacitación "{capacitacion.curso.nombre}".',
         })
@@ -374,7 +374,7 @@ class EnviarQRView(LoginRequiredMixin,View):
             box_size=10,
             border=4,
         )
-        qr_data = f'//localhost:8000/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
+        qr_data = f'https//descapa.iagmexico.com/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
         qr.add_data(qr_data)
         qr.make(fit=True)
         
@@ -415,7 +415,8 @@ class EnviarQRView(LoginRequiredMixin,View):
                 box_size=10,
                 border=4,
             )
-            qr_data = f'//localhost:8000/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
+            qr_data = f'https//descapa.iagmaxico.com/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
+#            qr_data = f'//localhost:8000/core/asistentes/registrar/{capacitacion.pk}/'  # URL de la capacitación
             qr.add_data(qr_data)
             qr.make(fit=True)
             
