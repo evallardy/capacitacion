@@ -126,19 +126,37 @@
             var video = document.getElementById('video');
             var capturedPhoto = document.getElementById('captured-photo');
 
-            var aspectRatio = video.videoWidth / video.videoHeight;
-            var targetHeight = 600;
-            var targetWidth = targetHeight * aspectRatio;
+            // Dimensiones del canvas para la foto horizontal
+            var targetWidth = 800;  // Ancho deseado
+            var targetHeight = 600; // Altura deseada
 
+            // Configurar dimensiones del canvas
             canvas.width = targetWidth;
             canvas.height = targetHeight;
 
-            var ctx = canvas.getContext('2d');  //.drawImage(video, 0, 0, targetWidth, targetHeight);
+            // Obtener el contexto 2D del canvas
+            var ctx = canvas.getContext('2d');
 
-            ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
-            ctx.rotate(270 * Math.PI / 180);  // Rotación de 90 grados en radianes
-            ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
-            ctx.save();
+            // Verificar si el video está en modo vertical o horizontal
+            if (video.videoWidth < video.videoHeight) {
+                // Si el video está en modo vertical (por ejemplo, cámara en retrato)
+                // Dibujar la imagen rotada 90 grados para que quede horizontal
+                ctx.save();
+                ctx.translate(targetWidth / 2, targetHeight / 2); // Desplazar al centro
+                ctx.rotate(-90 * Math.PI / 180); // Rotación antihoraria de 90 grados
+                ctx.drawImage(
+                    video,
+                    -video.videoHeight / 2, // Ajuste para centrado
+                    -video.videoWidth / 2,
+                    video.videoHeight,
+                    video.videoWidth
+                );
+                ctx.restore();
+            } else {
+                // Si el video ya está en modo horizontal (paisaje)
+                // Dibujar directamente
+                ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
+            }
 
             // Convertir la imagen del canvas a un dato URL (base64)
             var dataURL = canvas.toDataURL('image/png');
