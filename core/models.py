@@ -110,7 +110,7 @@ class Capacitacion(models.Model):
             inicio2 = trae_dia_habil(fecha_inicial, self.duracion - 1)
             fecha_final = inicio2.replace(hour=23, minute=59, second=59)
         else:
-            if self.duracion > 0 and self.horas_diarias > 0 and self.duracion > self.horas_diarias:
+            if self.duracion > 0 and self.horas_diarias > 0 and self.duracion >= self.horas_diarias:
                 resultado = self.duracion / self.horas_diarias
                 dias_totales = math.ceil(resultado)
 
