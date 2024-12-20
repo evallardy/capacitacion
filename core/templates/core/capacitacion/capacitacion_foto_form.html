@@ -125,14 +125,33 @@
             var canvas = document.getElementById('canvas');
             var video = document.getElementById('video');
             var capturedPhoto = document.getElementById('captured-photo');
-
+            
+            // Obtener las dimensiones del video
             var aspectRatio = video.videoWidth / video.videoHeight;
-            var targetHeight = 600;
+            var targetHeight = 600;  // Altura fija
+
+            // Calculamos el ancho a partir de la altura, manteniendo la proporción
             var targetWidth = targetHeight * aspectRatio;
 
+            // Configurar las dimensiones del canvas para la imagen horizontal
             canvas.width = targetWidth;
             canvas.height = targetHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
+
+            // Obtener el contexto 2D del canvas
+            var ctx = canvas.getContext('2d');
+
+            // Verificar si la imagen capturada es vertical y rotarla si es necesario
+            if (video.videoWidth < video.videoHeight) {
+                // Si el video está en modo vertical, rotamos la imagen a 90 grados
+                ctx.save();
+                ctx.translate(targetWidth / 2, targetHeight / 2);  // Desplazar al centro
+                ctx.rotate(90 * Math.PI / 180);  // Rotación de 90 grados en radianes
+                ctx.drawImage(video, -targetHeight / 2, -targetWidth / 2, targetHeight, targetWidth); // Dibujar la imagen rotada
+                ctx.restore();
+            } else {
+                // Si el video ya está en modo horizontal, dibujamos la imagen sin rotación
+                ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
+            }
 
             // Convertir la imagen del canvas a un dato URL (base64)
             var dataURL = canvas.toDataURL('image/png');
