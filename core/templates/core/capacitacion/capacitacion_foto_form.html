@@ -132,7 +132,8 @@
 
             canvas.width = targetWidth;
             canvas.height = targetHeight;
-            ctx = canvas.getContext('2d').drawImage(video, 0, 0, targetWidth, targetHeight);
+
+            var ctx = canvas.getContext('2d');  //.drawImage(video, 0, 0, targetWidth, targetHeight);
 
             ctx.save();
 
