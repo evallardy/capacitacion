@@ -64,14 +64,14 @@
     <div id="header_content">
         <p style="text-align: right;">
             <Label>
-                CURSO DE CAPACITACIÓN {{ capacitacion.curso.nombre }} PARA LA EMPRESA {{ capacitacion.empresa.nombre }},
+                CURSO {{ curso.tema.nombre }} PARA LA EMPRESA {{ curso.empresa.nombre }},
             </label>
             <br>
             <Label>
-                Total de {{ get_capacitacion.unidad_duracion.display }} {{ capacitación.duracion }}
+                Total de {{ get_curso.unidad_duracion.display }} {{ curso.duracion }}
             </label>
             <Label>
-                Ubicación de la capacitación {{ capacitacion.direccion }}
+                Ubicación del curso {{ curso.direccion }}
             </label>
         </p>
     </div>
@@ -85,7 +85,7 @@
         En el curso se dio el siguiente temario:
     </p>
     <p class="parrafo_negritas" style="text-align: center;">
-        {{ evaluacion.curso.temario }}
+        {{ evaluacion.tema.temario }}
     </p>
     <p class="parrafo_negritas">
         Lista se asistentes

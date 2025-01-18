@@ -1,0 +1,175 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="container" style="padding: 15px;">
+    <div class="mapa" style="padding: 10px;">
+        <h2>Fotos del curso {{ curso.tema.nombre }} para la empresa {{ curso.empresa.nombre }}
+        </h2>
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="cursoId" value="{{ curso.id }}">
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                <div class="card col-10 col-sm-8 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                    <div class="card-header">
+                        <label for="video">Cámara</label>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div style="padding: 0;">
+                            <div 
+                                style="background-color: white;">
+                                <video id="video" class="embed-responsive-item col-12" autoplay 
+                                    style="border-radius: 5px;"></video>
+                            </div>
+                            <div class="col-5" style="padding: 0 0 0 20px;" hidden>
+                                <label for="captured-photo">Foto Capturada</label>
+                                <canvas id="canvas" style="display:none;"></canvas>
+                                <input type="hidden" id="foto-data" name="foto">
+                                <div class="embed-responsive embed-responsive-16by9 mapa"
+                                    style="padding: 5px 10px 5px 10px; background-color: white;">
+                                    <img class="col-12" id="captured-photo" alt="Foto capturada"
+                                        style="display: {% if form.instance.foto %}block{% else %}none{% endif %};"
+                                        src="{% if form.instance.foto %}{{ form.instance.foto.url }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row justify-content-center align-items-center" style="height: 50px;">
+                            <div class="col-6 text-center">
+                                <button class="btn btn-dark" id="snap">Tomar Foto</button>
+                            </div>
+                            <div class="col-6 text-center">
+                                {% if instructor %}
+                                <a class="btn btn-secondary" href="{% url 'instructor_curso_list' %}">Regresar</a>
+                                {% else %}
+                                <a class="btn btn-secondary" href="{% url 'curso_list' %}">Regresar</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 card mt-2">
+                    <div class="card-header">
+                        Fotos tomadas
+                    </div>
+                    <div class="row card-body" style="padding: 0;">
+                        {% for foto in fotos %}
+                        <div class="col-6 col-sm-4 col-md-4 col-lg-3 col-xl-3 col-xxl-3 mt-2">
+                            <div class="card" style="background-color: lightgray;">
+                                <img src="{{ foto.foto.url }}" class="card-img-top" alt="Foto">
+                                <div class="card-body text-center" style="padding: 0;">
+                                    <button class="btn btn-danger eliminar-foto"
+                                        data-id="{{ foto.id }}">Eliminar</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted mt-3 ms-3" style="font-weight: bold;">No hay fotos tomadas aún.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.body.addEventListener('click', function (event) {
+            if (event.target.classList.contains('eliminar-foto')) {
+                const fotoId = event.target.getAttribute('data-id');
+                const cursoId = document.getElementById('cursoId').value; // O de otra forma
+                const url = '/core/curso/' + cursoId + '/foto/' + fotoId + '/eliminar/';
+
+                $.ajax({
+                    url: url,
+                    type: 'POST', // Cambiado a DELETE
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value, // Incluye el CSRF token
+                    },
+                });
+            }
+        });
+
+        // Acceder a la cámara
+        navigator.mediaDevices.enumerateDevices()
+            .then(function(devices) {
+                let rearCamera = null;
+                devices.forEach(function(device) {
+                    if (device.kind === 'videoinput') {
+                        // Seleccionamos la cámara trasera si está disponible
+                        if (device.label.toLowerCase().includes('back') || device.label.toLowerCase().includes('rear')) {
+                            rearCamera = device.deviceId;
+                        }
+                    }
+                });
+
+                // Si encontramos la cámara trasera, la usamos, si no, la primera cámara disponible
+                const constraints = {
+                    video: {
+                        deviceId: rearCamera ? { exact: rearCamera } : undefined
+                    }
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function (stream) {
+                        var video = document.getElementById('video');
+                        video.srcObject = stream;
+                        video.play();
+                    })
+                    .catch(function (err) {
+                        console.log("An error occurred: " + err);
+                    });
+            })
+            .catch(function (err) {
+                console.log("An error occurred while accessing devices: " + err);
+            });
+
+        // Tomar una foto cuando se haga clic en el botón
+        document.getElementById('snap').addEventListener('click', function () {
+            var canvas = document.getElementById('canvas');
+            var video = document.getElementById('video');
+            var capturedPhoto = document.getElementById('captured-photo');
+
+            // Dimensiones del canvas para la foto horizontal
+            var targetWidth = 800;  // Ancho deseado
+            var targetHeight = 600; // Altura deseada
+
+            // Configurar dimensiones del canvas
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            // Obtener el contexto 2D del canvas
+            var ctx = canvas.getContext('2d');
+
+            // Verificar si el video está en modo vertical o horizontal
+            if (video.videoWidth < video.videoHeight) {
+                // Si el video está en modo vertical (por ejemplo, cámara en retrato)
+                // Dibujar la imagen rotada 90 grados para que quede horizontal
+                ctx.save();
+                ctx.translate(targetWidth / 2, targetHeight / 2); // Desplazar al centro
+                ctx.rotate(-90 * Math.PI / 180); // Rotación antihoraria de 90 grados
+                ctx.drawImage(
+                    video,
+                    -video.videoHeight / 2, // Ajuste para centrado
+                    -video.videoWidth / 2,
+                    video.videoHeight,
+                    video.videoWidth
+                );
+                ctx.restore();
+            } else {
+                // Si el video ya está en modo horizontal (paisaje)
+                // Dibujar directamente
+                ctx.drawImage(video, 0, 0, targetWidth, targetHeight);
+            }
+
+            // Convertir la imagen del canvas a un dato URL (base64)
+            var dataURL = canvas.toDataURL('image/png');
+            document.getElementById('foto-data').value = dataURL;
+
+            // Mostrar la imagen capturada en el elemento <img>
+            capturedPhoto.src = dataURL;
+            capturedPhoto.style.display = 'block';
+        });
+    });
+</script>
+{% endblock %}

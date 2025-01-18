@@ -1,9 +1,9 @@
 from django import forms
-from .models import Curso, Capacitacion, Instructor, Empresa, Asistente, Evaluacion, CapacitacionFoto
+from .models import Tema, Curso, Instructor, Empresa, Asistente, Evaluacion, CursoFoto
 
-class CursoForm(forms.ModelForm):
+class TemaForm(forms.ModelForm):
     class Meta:
-        model = Curso
+        model = Tema
         fields = ['nombre', 'costo', 'duracion', 'unidad_duracion', 'horas_diarias', 'estado', 'temario', 'notas']
         widgets = {
             'estado': forms.Select(attrs={'class': 'form-control'}),
@@ -16,14 +16,14 @@ class CursoForm(forms.ModelForm):
             'duracion': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
-class CapacitacionForm(forms.ModelForm):
+class CursoForm(forms.ModelForm):
     class Meta:
-        model = Capacitacion
-        fields = ['empresa', 'curso', 'instructor', 'duracion', 'unidad_duracion', 'horas_diarias',  
-                    'inicio', 'direccion', 'costo', 'notas', 'estado', 'activar_evaluacion',
+        model = Curso
+        fields = ['empresa', 'tema', 'instructor', 'duracion', 'unidad_duracion', 'horas_diarias',  
+                    'inicio', 'direccion', 'costo', 'notas', 'estado', 'activar_evaluacion' 
                     ]
         widgets = {
-            'curso': forms.Select(attrs={'class': 'form-control'}),
+            'tema': forms.Select(attrs={'class': 'form-control'}),
             'empresa': forms.Select(attrs={'class': 'form-control'}),
             'duracion': forms.NumberInput(attrs={'class': 'form-control'}),
             'unidad_duracion': forms.Select(attrs={'class': 'form-control'}),
@@ -38,7 +38,7 @@ class CapacitacionForm(forms.ModelForm):
         }
         labels = {
             'empresa': 'Empresa:',
-            'curso': 'Curso:',
+            'Tema': 'Tema:',
             'instructor': 'Instructor:',
             'unidad_duracion': 'Unidad:',
             'duracion': 'Duración:',
@@ -47,12 +47,12 @@ class CapacitacionForm(forms.ModelForm):
             'direccion': 'Dirección:',
             'costo': 'Costo:',
             'notas': 'Notas:',
-            'estado': 'Estado:',
+            'estatus': 'Estatus:',
             'activar_evaluacion': 'Act.eval.:',
         }
-class CapacitacionFotoForm(forms.ModelForm):
+class CursoFotoForm(forms.ModelForm):
     class Meta:
-        model = CapacitacionFoto
+        model = CursoFoto
         fields = ['foto']
 
     def __init__(self, *args, **kwargs):
@@ -64,11 +64,13 @@ class CapacitacionFotoForm(forms.ModelForm):
 class InstructorForm(forms.ModelForm):
     class Meta:
         model = Instructor
-        fields = ['nombre', 'celular', 'correo']
+        fields = ['nombre', 'celular', 'correo', 'usuario', 'estatus']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),
             'correo': forms.EmailInput(attrs={'class': 'form-control'}),
+            'usuario': forms.Select(attrs={'class': 'form-control'}),
+            'estatus': forms.Select(attrs={'class': 'form-control'}),
         }
 
 class EmpresaForm(forms.ModelForm):
@@ -87,7 +89,7 @@ class AsistenteForm(forms.ModelForm):
         model = Asistente
         fields = ['nombre', 'area', 'celular', 'correo']
         widgets = {
-#            'capacitacion': forms.Select(attrs={'class': 'form-control'}),
+#            'curso': forms.Select(attrs={'class': 'form-control'}),
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
             'area': forms.TextInput(attrs={'class': 'form-control'}),
             'celular': forms.TextInput(attrs={'class': 'form-control'}),

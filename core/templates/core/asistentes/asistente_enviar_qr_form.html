@@ -3,11 +3,11 @@
 {% load static %}
 {% block content %}
 <div class="container mt-5">
-    <h3>QR Capacitación {{ capacitacion.curso.nombre }} para la empresa {{ capacitacion.empresa.nombre }}</h3>
+    <h3>QR curso {{ curso.tema.nombre }} para la empresa {{ curso.empresa.nombre }}</h3>
 
     <!-- Mostrar el QR -->
     <div class="col-2 ms-5">
-        <img src="{{ qr_url }}" alt="QR de la Capacitación" class="img-fluid d-block mx-auto">
+        <img src="{{ qr_url }}" alt="QR del curso" class="img-fluid d-block mx-auto">
     </div>
 
     <form method="post">
@@ -25,7 +25,7 @@
             {{ form.contenido }}
         </div>
         <button type="submit" class="btn btn-primary">Enviar Correo</button>
-        <a href="{% url 'capacitacion_list' %}" class="btn btn-secondary">Regresar</a>
+        <a href="{% url 'curso_list' %}" class="btn btn-secondary">Regresar</a>
         {% if respuesta %}
         {{ respuesta }}
         {% endif %}

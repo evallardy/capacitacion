@@ -2,10 +2,10 @@
 
 {% block content %}
   <h2>Confirmar Eliminación</h2>
-  <p>¿Estás seguro de que deseas eliminar la evaluación de {{ evaluacion.asistente.nombre }} del curso {{ evaluacion.curso.nombre }}?</p>
+  <p>¿Estás seguro de que deseas eliminar la evaluación de {{ evaluacion.asistente.nombre }} del tema {{ evaluacion.tema.nombre }}?</p>
   <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Eliminar</button>
-    <a href="{% url 'curso_list' %}" class="btn btn-secondary">Cancelar</a>
+    <a href="{% url 'tema_list' %}" class="btn btn-secondary">Cancelar</a>
   </form>
 {% endblock %}

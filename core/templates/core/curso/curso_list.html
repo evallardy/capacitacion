@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Cursos</h2>
+<a href="{% url 'curso_create' %}" class="btn btn-primary mb-3">Crear Curso</a>
+<a class="btn btn-info mb-3" href="{% url 'tema_list' %}">Temas</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tema</th>
+            <th>Inicio</th>
+            <th>Duración</th>
+            <th>Instructor</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for curso in cursos %}
+        <tr>
+            <td>{{ curso.tema.nombre }}</td>
+            <td>{{ curso.inicio }}</td>
+            <td>{{ curso.duracion }} {{ curso.unidad_duracion }}</td>
+            <td>{{ curso.instructor.nombre }}</td>
+            <td>
+                <a href="{% url 'curso_detail' curso.pk %}" class="btn btn-info btn-sm">Ver</a>
+                <a href="{% url 'curso_update' curso.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                <a href="{% url 'curso_delete' curso.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                <a href="{% url 'enviar_qr' curso.pk %}" class="btn btn-primary btn-sm">Correo</a>
+                <a href="{% url 'asistente_list' curso.pk %}" class="btn btn-primary btn-sm">Asistentes</a>
+                <a href="{% url 'curso_foto' curso.pk %}" class="btn btn-primary btn-sm">Fotos</a>
+                <a href="{% url 'curso_fotos' curso.pk %}" class="btn btn-primary btn-sm">Fotos Reporte</a>
+                <a href="{% url 'cursoPDF' curso.pk %}" class="btn btn-primary btn-sm">Reporte PDF</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

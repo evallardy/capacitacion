@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>{{ object.nombre }}</h1>
+<p><strong>Curso:</strong> {{ object.tema.nombre }}</p>
+<p><strong>Empresa:</strong> {{ object.empresa.nombre }}</p>
+<p><strong>Instructor:</strong> {{ object.instructor.nombre }}</p>
+<p><strong>Inicio:</strong> {{ object.inicio }}</p>
+<p><strong>Duración:</strong> {{ object.duracion }} {{ object.unidad_duracion }}</p>
+<p><strong>Evaluación activa:</strong> {{ object.get_activar_evaluacion_display }}</p>
+<p><strong>Estatus:</strong> {{ object.get_estado_display }}</p>
+<p><strong>Temario:</strong></p>
+<p>{{ object.tema.temario }}</p>
+{% if instructor %}
+    <a href="{% url 'instructor_curso_list' %}" class="btn btn-secondary">Volver</a>
+{% else %}
+    <a href="{% url 'curso_list' %}" class="btn btn-secondary">Volver</a>
+{% endif %}
+{% endblock %}

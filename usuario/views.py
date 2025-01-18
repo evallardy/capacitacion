@@ -2,22 +2,22 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic.edit import UpdateView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 
 from usuario.models import Usuario
-from .forms import UsuarioForm, UsuarioFormEdit
+from .forms import UsuarioForm, UsuarioFormEdit, CambiaContrasenaForm
 
 class usuarios(LoginRequiredMixin, ListView):
     model = Usuario
-    template_name = 'usuario/usuarios.html'
+    template_name = 'usuario/usuario_list.html'
     context_object_name = 'usuarios'
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = Usuario.objects.exclude(username='iagevm').exclude(username='jcamarillo')
+        queryset = Usuario.objects.exclude(username='iagevm').exclude(username='jcamarillo').exclude(username='evallardy')
         # Puedes realizar filtros o manipulaciones adicionales en el queryset si es necesario
         return queryset
     def get_context_data(self, **kwargs):
@@ -30,8 +30,8 @@ class usuarios(LoginRequiredMixin, ListView):
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = Usuario
     form_class = UsuarioFormEdit
-    template_name = 'usuario/usuario.html'
-    success_url = reverse_lazy('usuarios')  # URL de éxito después de guardar
+    template_name = 'usuario/usuario_form.html'
+    success_url = reverse_lazy('usuario_list')  # URL de éxito después de guardar
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,6 +83,28 @@ def registro(request):
         formulario = UsuarioForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            return redirect(to="usuarios")
+            return redirect(to="usuario_list")
         data["form"] = formulario
-    return render(request, 'registration/registro.html', data)
+    return render(request, 'usuario/registro.html', data)
+
+class cambiar_contrasena(LoginRequiredMixin, View):
+    template_name = 'usuario/cambiar_contrasena.html'
+    form_class = CambiaContrasenaForm
+    success_url = reverse_lazy("index")
+
+    def get(self, request, *args, **kwargs ):
+        return render(request, self.template_name, {'form': self.form_class})
+    
+    def post(self, request, *args, **kwargs ):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            user = Usuario.objects.filter(id=request.user.id)
+            if user.exists(): 
+                user = user.first()
+                user.set_password(form.cleaned_data.get('password1'))
+                user.save()
+                return redirect(self.success_url)
+            return redirect(self.success_url)
+        else:
+            form = self.form_class(request.POST)
+            return render(request, self.template_name, {'form': form})

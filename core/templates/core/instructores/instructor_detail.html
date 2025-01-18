@@ -4,6 +4,8 @@
   <h2>{{ instructor.nombre }}</h2>
   <p><strong>Celular:</strong> {{ instructor.celular }}</p>
   <p><strong>Correo:</strong> {{ instructor.correo }}</p>
+  <p><strong>Usuario:</strong> {{ instructor.usuario.username }}</p>
+  <p><strong>Activo:</strong> {{ instructor.estatus }}</p>
   <a href="{% url 'instructor_update' instructor.pk %}" class="btn btn-warning">Editar</a>
   <a href="{% url 'instructor_delete' instructor.pk %}" class="btn btn-danger">Eliminar</a>
   <a href="{% url 'instructor_list' %}" class="btn btn-secondary">Volver</a>

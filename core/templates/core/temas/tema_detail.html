@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+{% block content %}
+  <div class="container mt-4">
+    <h1>{{ tema.nombre }}</h1>
+    <p><strong>Costo:</strong> ${{ tema.costo }}</p>
+    <p><strong>Duración:</strong> {{ tema.duracion }} {{ tema.unidad_duracion }}</p>
+    <p><strong>Estado:</strong> {{ tema.estado }}</p>
+    <a href="{% url 'tema_update' tema.pk %}" class="btn btn-warning">Editar</a>
+    <a href="{% url 'tema_delete' tema.pk %}" class="btn btn-danger">Eliminar</a>
+    <a href="{% url 'tema_list' %}" class="btn btn-secondary">Volver a la lista</a>
+  </div>
+{% endblock %}

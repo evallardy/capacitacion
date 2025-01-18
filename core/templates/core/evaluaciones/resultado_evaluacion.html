@@ -4,12 +4,12 @@
 <div class="container mt-5">
     <h1 class="mb-4">Resultados de la Evaluación</h1>
     <div class="alert alert-info">
-        <p><strong>Evaluación del curso:</strong> {{ evaluacion.curso.nombre }}</p>
+        <p><strong>Evaluación del tema:</strong> {{ evaluacion.tema.nombre }}</p>
         <p><strong>Respuestas Correctas:</strong> {{ respuesta_asistente.correctas }}</p>
         <p><strong>Respuestas Incorrectas:</strong> {{ respuesta_asistente.incorrectas }}</p>
     </div>
     <div class="mt-4">
-        <a href="{% url 'evaluacion_asistente' curso_id=evaluacion.curso.id asistente_id=asistente.id %}" class="btn btn-primary">Volver a tomar evaluación</a>
+        <a href="{% url 'evaluacion_asistente' tema_id=evaluacion.tema.id asistente_id=asistente.id %}" class="btn btn-primary">Volver a tomar evaluación</a>
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Terminar</button>

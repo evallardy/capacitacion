@@ -3,9 +3,9 @@
 {% block content %}
 {% if asistente.activo == 'SI' %}
 <div class="container mt-4">
-    <h1 class="mb-4">Evaluación para el curso: {{ evaluacion.curso.nombre }}</h1>
+    <h1 class="mb-4">Evaluación para el tema: {{ evaluacion.tema.nombre }}</h1>
     <h3 class="mb-4">Nombre: {{ asistente.nombre }}</h3>
-    <form method="post" action="{% url 'guardar_respuestas' evaluacion.curso.id asistente.id %}">
+    <form method="post" action="{% url 'guardar_respuestas' evaluacion.tema.id asistente.id %}">
         {% csrf_token %}
         
         {% for pregunta in preguntas %}

@@ -6,10 +6,14 @@
     {% csrf_token %}
     {{ form.as_p }}
     <div class="col-8" hidden>
-      {{ form.capacitacion.label_tag }}
-      <input type="text" name="capacitacion" id="id_capacitacion" value="{{id_capacitacion}}">
+      {{ form.curso.label_tag }}
+      <input type="text" name="curso" id="id_curso" value="{{curso_id}}">
     </div>
     <button type="submit" class="btn btn-success">Guardar</button>
   </form>
-  <a href="{% url 'asistente_list' id_capacitacion %}" class="btn btn-secondary mt-3">Volver</a>
+  {% if instructor %}
+  <a href="{% url 'instructor_asistente_list' curso_id %}" class="btn btn-secondary mt-3">Volver</a>
+  {% else %}
+  <a href="{% url 'asistente_list' curso_id %}" class="btn btn-secondary mt-3">Volver</a>
+  {% endif %}
 {% endblock %}

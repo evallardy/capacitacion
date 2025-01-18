@@ -1,7 +1,7 @@
 {% extends 'core/base_registro.html' %}
 
 {% block content %}
-{% if capacitacion.activar_evaluacion == 'SI' %}
+{% if curso.activar_evaluacion == 'SI' %}
 <h2>Asistentes</h2>
   <table class="table table-striped">
     <thead>
@@ -19,17 +19,17 @@
           <td>{{ asistente.area }}</td>
           <td>{{ asistente.correo }}</td>
           <td>
-            <a href="{% url 'evaluacion_asistente' asistente.capacitacion.curso.id asistente.id %}" class="btn btn-info btn-sm">Evaluación</a>
+            <a href="{% url 'evaluacion_asistente' asistente.curso.tema.id asistente.id %}" class="btn btn-info btn-sm">Evaluación</a>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
-{% elif capacitacion.activar_evaluacion == 'NO' %}
+{% elif curso.activar_evaluacion == 'NO' %}
 <div class="container mt-5">
     <div class="card">
         <div class="card-header">
-            <h3>Registro para Capacitación {{ capacitacion.curso.nombre }} de la empresa {{ capacitacion.empresa.nombre }}</h3>
+            <h3>Registro para el curso {{ curso.tema.nombre }} de la empresa {{ curso.empresa.nombre }}</h3>
         </div>
         <div class="card-body">
             <form method="post">
@@ -37,8 +37,8 @@
                 <div class="mb-3">
                     {{ form.as_p }}
                     <div class="col-8">
-                        Capacitación
-                        <input type="text" name="capacitacion" id="id_capacitacion" value="{{capacitacion.id}}">
+                        Curso
+                        <input type="text" name="curso" id="id_curso" value="{{curso.id}}">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Registrar</button>

@@ -1,0 +1,46 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h1>{% if object %}Editar {% else %}Nuevo {% endif %} curso</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+        {% for field in form %}
+            {% if field.label == 'Dirección:' or field.label == 'Notas:' %}
+                <div class="form-group col-12">
+            {% else %}
+                <div class="form-group col-4">
+            {% endif %}
+                {{ field.label_tag }} <!-- Muestra la etiqueta -->
+                {{ field }} <!-- Muestra el campo completo -->
+            </div>
+        {% endfor %}
+    </div>
+    <div class="mt-2">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'curso_list' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        // Función para mostrar/ocultar el campo de horas_diarias
+        function toggleDuracionField() {
+            if ($('#id_unidad_duracion').val() === 'Días') {
+                $('#id_horas_diarias').hide(); // Ocultar el campo
+                $('label[for="id_horas_diarias"]').hide(); // Ocultar el label
+                $('#id_horas_diarias').val(0); // Limpiar valor
+            } else {
+                $('#id_horas_diarias').show(); // Mostrar el campo
+                $('label[for="id_horas_diarias"]').show(); // Mostrar el label
+            }
+        }
+
+        // Escuchar cambios en el select
+        $('#id_unidad_duracion').on('change', toggleDuracionField);
+
+        // Inicializar el estado al cargar la página
+        toggleDuracionField();
+    });
+</script>
+{% endblock %}

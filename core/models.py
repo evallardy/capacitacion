@@ -6,13 +6,20 @@ from django.utils.translation import gettext_lazy as _
 from django.db.models import Q
 import math
 import base64
+from usuario.models import Usuario
 
 from feriados.views import trae_dia_habil
 
 class Instructor(models.Model):
+    ACTIVO_CHOICES = [
+        ('SI', 'SI'),
+        ('NO', 'NO'),
+    ]
     nombre = models.CharField(max_length=100)
     celular = models.CharField(max_length=15)
     correo = models.EmailField(unique=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT, related_name='usuario_instructor', blank=True, null=True)
+    estatus = models.CharField(max_length=2 ,choices=ACTIVO_CHOICES, default='SI')
 
     def __str__(self):
         return self.nombre
@@ -32,7 +39,7 @@ class Empresa(models.Model):
     def get_absolute_url(self):
         return reverse('empresa_list')
 
-class Curso(models.Model):
+class Tema(models.Model):
     DURACION_CHOICES = [
         ('Horas', 'Horas'),
         ('Días', 'Días'),
@@ -53,7 +60,15 @@ class Curso(models.Model):
     def __str__(self):
         return self.nombre
 
-class Capacitacion(models.Model):
+    def total_preguntas(self):
+        """
+        Devuelve el total de preguntas asociadas al tema a través de la evaluación.
+        """
+        if hasattr(self, 'evaluacion_curso'):  # Verifica si tiene evaluación asociada
+            return self.evaluacion_curso.evaluacion_preguntas.count()
+        return 'Ninguna'  # Si no tiene evaluación, retorna 0
+
+class Curso(models.Model):
     DURACION_CHOICES = [
         ('Horas', 'Horas'),
         ('Días', 'Días'),
@@ -63,8 +78,8 @@ class Capacitacion(models.Model):
         ('NO', 'NO'),
         ('XX', 'XX'),
     ]
-    curso = models.ForeignKey(Curso, on_delete=models.PROTECT, related_name='curso_capacitacion')
-    empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, related_name='empresa_capacitacion', null=True, blank=True)
+    tema = models.ForeignKey(Tema, on_delete=models.PROTECT, related_name='tema_curso')
+    empresa = models.ForeignKey(Empresa, on_delete=models.PROTECT, related_name='empresa_curso', null=True, blank=True)
     duracion = models.PositiveIntegerField()
     unidad_duracion = models.CharField(max_length=5, choices=DURACION_CHOICES, default='Horas')
     inicio = models.DateTimeField()
@@ -72,7 +87,7 @@ class Capacitacion(models.Model):
     horas_diarias = models.PositiveIntegerField(default=0)
     direccion = models.TextField()
     costo = models.DecimalField(max_digits=10, decimal_places=2)
-    instructor = models.ForeignKey(Instructor, on_delete=models.PROTECT, related_name="instructor_capacitacion")
+    instructor = models.ForeignKey(Instructor, on_delete=models.PROTECT, related_name="instructor_curso")
     notas = models.TextField(blank=True, null=True)
     estado = models.CharField(
         max_length=15,
@@ -82,7 +97,7 @@ class Capacitacion(models.Model):
     activar_evaluacion = models.CharField(max_length=2, choices=ACTIVAR_EVALUACION_CHOICES, default='NO')
 
     def clean(self):
-        # Validar que el instructor no tenga dos capacitaciones al mismo tiempo
+        # Validar que el instructor no tenga dos cursos al mismo tiempo
         if self.unidad_duracion == 'Días':
             fecha_inicial = self.inicio.replace(hour=0, minute=0, second=1)
 #            inicio2 = trae_dia_habil(fecha_inicial, self.duracion - 1)
@@ -90,19 +105,19 @@ class Capacitacion(models.Model):
         else:
             fecha_inicial = self.inicio
         fecha_final = self.fecha_termino()
-        capacitaciones = Capacitacion.objects.filter(
+        cursos = Curso.objects.filter(
             instructor=self.instructor).exclude(pk=self.pk).filter(
                 Q(inicio__range=(fecha_inicial, fecha_final)) |
                 Q(final__range=(fecha_inicial, fecha_final))
             )
-        if capacitaciones.exists():
-            raise ValidationError(_('El instructor ya tiene una capacitación programado en esta fecha.'))
+        if cursos.exists():
+            raise ValidationError(_('El instructor ya tiene un curso programado en esta fecha.'))
 
     def __str__(self):
-        return self.curso.nombre
+        return self.tema.nombre
 
     def get_absolute_url(self):
-        return reverse('capacitacion_list')
+        return reverse('curso_list')
 
     def fecha_termino(self):
         if self.unidad_duracion == 'Días':
@@ -124,13 +139,16 @@ class Capacitacion(models.Model):
         self.final = self.fecha_termino()
         super().save(*args, **kwargs)
 
-class CapacitacionFoto(models.Model):
+    def total_preguntas(self):
+        return self.tema.total_preguntas()
+
+class CursoFoto(models.Model):
     FOTO_ACTIVAR_CHOICES = [
         ('SI', True),
         ('NO', False),
     ]
-    capacitacion = models.ForeignKey(Capacitacion, on_delete=models.PROTECT, related_name='capacitacion_foto')
-    foto = models.ImageField("Foto", upload_to='Capacitacion/', null=True, blank=True)
+    curso = models.ForeignKey(Curso, on_delete=models.PROTECT, related_name='curso_foto')
+    foto = models.ImageField("Foto", upload_to='Curso/', null=True, blank=True)
     activar_para_reporte = models.BooleanField(choices=FOTO_ACTIVAR_CHOICES, default=True)
 
 class Asistente(models.Model):
@@ -138,7 +156,7 @@ class Asistente(models.Model):
         ('SI', 'SI'),
         ('NO', 'NO'),
     ]
-    capacitacion = models.ForeignKey(Capacitacion, on_delete=models.PROTECT, related_name="asistentes")
+    curso = models.ForeignKey(Curso, on_delete=models.PROTECT, related_name="asistentes")
     nombre = models.CharField(max_length=100)
     area = models.CharField(max_length=100)
     celular = models.CharField(max_length=15)
@@ -148,15 +166,24 @@ class Asistente(models.Model):
     activo = models.CharField(max_length=2, choices=ASISTENTE_ACTIVO, default='SI')
 
     def __str__(self):
-        return f"{self.nombre} - {self.capacitacion.nombre}"
+        return f"{self.nombre} - {self.curso.nombre}"
 
     def get_absolute_url(self):
         return reverse('asistente_list')
 
+    def calificaciones(self):
+        respuestas = RespuestaAsistente.objects.filter(asistente=self)
+        data = ''
+        coma = ''
+        for respuesta in respuestas:
+            data += coma + str(respuesta.correctas)
+            coma = ', '
+        return data
+
 class Evaluacion(models.Model):
-    curso = models.OneToOneField(
-        Curso, 
-        on_delete=models.PROTECT, 
+    tema = models.OneToOneField(
+        Tema, 
+        on_delete=models.CASCADE, 
         related_name="evaluacion_curso",
         blank=True, 
         null=True
@@ -164,7 +191,7 @@ class Evaluacion(models.Model):
     comentarios = models.TextField()
 
     def __str__(self):
-        return f"Evaluación de {self.curso.nombre}"
+        return f"Evaluación de {self.tema.nombre}"
         
 class Evaluacion_Pregunta(models.Model):
     evaluacion = models.ForeignKey(Evaluacion, on_delete=models.CASCADE, related_name="evaluacion_preguntas")
@@ -198,4 +225,4 @@ class RespuestaAsistente(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Respuestas de {self.asistente} para {self.evaluacion.curso.nombre}"
+        return f"Respuestas de {self.asistente} para {self.evaluacion.tema.nombre}"

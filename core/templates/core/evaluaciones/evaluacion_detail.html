@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Evaluación: {{ evaluacion.curso.nombre }}</h1>
+    <h1>Cuestionario: {{ evaluacion.tema.nombre }}</h1>
     <p>{{ evaluacion.comentarios }}</p>
 
     <h2>Preguntas y Respuestas</h2>
@@ -61,7 +61,7 @@
         </tbody>
     </table>
 
-    <a href="{% url 'curso_list' %}" class="btn btn-secondary">Volver a cursos</a>
+    <a href="{% url 'tema_list' %}" class="btn btn-secondary">Volver a temas</a>
 </div>
 
 <!-- Modal para agregar pregunta -->

@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<h2>Cursos de {{ instructor.nombre }}</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tema</th>
+            <th>Inicio</th>
+            <th>Duración</th>
+            <th>Instructor</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for curso in cursos %}
+        <tr>
+            <td>{{ curso.tema.nombre }}</td>
+            <td>{{ curso.inicio }}</td>
+            <td>{{ curso.duracion }} {{ curso.unidad_duracion }}</td>
+            <td>{{ curso.instructor.nombre }}</td>
+            <td>
+                <a href="{% url 'curso_detail' curso.id 1 %}" class="btn btn-info btn-sm">Ver</a>
+                <a href="{% url 'instructor_asistente_list' curso.id %}" class="btn btn-info btn-sm">Asistentes</a>
+                <a href="{% url 'instructor_curso_foto' curso.id 1 %}" class="btn btn-info btn-sm">Fotos</a>
+                {% if curso.activar_evaluacion == 'SI' %}
+                    <a href="{% url 'activar_evaluacion' curso.id %}" class="btn btn-primary btn-sm">Desactivar evaluación</a>
+                {% else %}
+                    <a href="{% url 'activar_evaluacion' curso.id %}" class="btn btn-success btn-sm">Activar evaluación</a>
+                {% endif %}
+                {% if curso.estado == 'Terminado' %}
+                    <a href="{% url 'terminar_curso' curso.id %}" class="btn btn-success btn-sm">Activar curso</a>
+                {% else %}
+                    <a href="{% url 'terminar_curso' curso.id %}" class="btn btn-primary btn-sm">Terminar curso</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

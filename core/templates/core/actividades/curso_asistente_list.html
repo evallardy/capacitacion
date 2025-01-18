@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+  <h2>Asistentes del curso {{ curso.tema.nombre }} de la empresa {{ curso.empresa.nombre }}</h2>
+  <table class="table table-striped">
+    <thead class="text-center">
+      <tr>
+        <th>Nombre</th>
+        <th>Área</th>
+        <th>Correo</th>
+        <th class="col-1">Preguntas</th>
+        <th class="col-2">Aciertos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asistente in asistentes %}
+        <tr>
+          <td>{{ asistente.nombre }}</td>
+          <td>{{ asistente.area }}</td>
+          <td>{{ asistente.correo }}</td>
+          <td class="text-center">{{ curso.total_preguntas }}</td>
+          <td class="text-center">{{ asistente.calificaciones }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{% url 'instructor_curso_list' %}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}
